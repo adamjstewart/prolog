@@ -24,7 +24,7 @@ let string_quote = '"'
 let solo = ['(' ')' ']' '}']
 let special = ['!' ',' ';' '[' '{' '|']
 let line_comment = '%' [^ '\n'] *
-let escape = '\'
+let escape = '\\'
 let first_comment = '/'
 let second_comment = '*'
 let symbol = ['#' '+' '-' '.' ':' '<' '=' '>' '?' '@' '^' '`' '~' '$' '&']
@@ -32,12 +32,12 @@ let symbol = ['#' '+' '-' '.' ':' '<' '=' '>' '?' '@' '^' '`' '~' '$' '&']
 (* Groups of characters *)
 let alphanumerical = upper_case | underline | lower_case | digit
 let delimiter = [')' '}' ']' ',' '|']
-let any_character = ['A' - 'Z' 'a' - 'z' '0' - '9' ' ' '`' '~' '!' '@' '#' '$' '%' '^' '&' '*' '(' ')' '-' '_' '=' '+' '[' ']' '{' '}' '|' ';' ':' ''' ',' '.' '<' '>' '/' '?' '\']
-let non_escape = any_character # ['\']
+let any_character = ['A' - 'Z' 'a' - 'z' '0' - '9' ' ' '`' '~' '!' '@' '#' '$' '%' '^' '&' '*' '(' ')' '-' '_' '=' '+' '[' ']' '{' '}' '|' ';' ':' ''' ',' '.' '<' '>' '/' '?' '\\']
+let non_escape = any_character # ['\\']
 let sign = ['+' '-']
 
 let atom =
-      (lowercase alphanumerical *)
+      (lower_case alphanumerical *)
     | (symbol | first_comment | second_comment | escape ) +
     | (atom_quote (non_escape | escape any_character +) * atom_quote)
     | '|'
@@ -53,12 +53,12 @@ let floats =
       integers '.' digits (['e' 'E'] sign ? digits | "Inf") ?
     | integers ['e' 'E'] sign ? digits
 
-let variable = (upper_case | underscore) alphanumeric *
+let variable = (upper_case | underline) alphanumerical *
 
 rule token = parse
     (* Meta-characters *)
     | [' ' '\t' '\n']       { token lexbuf }  (* skip over whitespace *)
-    | comment               { token lexbuf }  (* skip over line comments *)
+    | line_comment          { token lexbuf }  (* skip over line comments *)
     | eof                   { EOF }
 
     (* Atoms *)
@@ -66,7 +66,7 @@ rule token = parse
 
     (* Numbers *)
     | integers as n         { INT (int_of_string n) }
-    | rationals as (n, d)   { RAT (int_of_string n, int_of_string d) }
+    (*| rationals as (n, d)   { RAT (int_of_string n, int_of_string d) }*)
     | floats as f           { FLOAT (float_of_string f) }
 
     (* Strings *)
@@ -77,7 +77,7 @@ rule token = parse
 
 and string_parser acc = parse
     (* By default, consecutive strings are concatenated into a single string. *)
-    | string_quote blank_space * string_quote   { string_parser acc }
+    | string_quote blank_space * string_quote   { string_parser acc lexbuf }
     | '"'                                       { STRING acc }
     | non_escape as s                           { string_parser (acc ^ (String.make 1 s)) lexbuf }
     | "\\a"                                     { string_parser (acc ^ (String.make 1 (Char.chr 7))) lexbuf }
