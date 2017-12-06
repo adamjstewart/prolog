@@ -1,0 +1,9 @@
+# For colors in compiler messages. Mode can be auto, always, or never
+true: color(always)
+
+# Module paths to include
+"src": include
+"tests": include
+
+# OUnit is required for unit tests
+<tests/*>: package(ounit)

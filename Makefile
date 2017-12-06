@@ -1,13 +1,20 @@
-MAKE = make
+OCB = ocamlbuild -use-ocamlfind
 
-.PHONY: all test clean
 
-all:
-	$(MAKE) -C src
+.PHONY: all native byte test clean
 
-test: all
-	$(MAKE) -C test test
+
+all: byte
+
+native:
+	$(OCB) main.native
+
+byte:
+	$(OCB) main.byte
+
+test:
+	$(OCB) test.byte
+	./test.byte
 
 clean:
-	$(MAKE) -C src  clean
-	$(MAKE) -C test clean
+	$(OCB) -clean
