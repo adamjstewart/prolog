@@ -1,8 +1,13 @@
-SOURCES = \
-	src/common \
-	src/lexer.mll \
+MAKE = make
 
-RESULT = bin/prologInterp
-  
-OCAMLMAKEFILE = OCamlMakefile
-include $(OCAMLMAKEFILE)
+.PHONY: all test clean
+
+all:
+	$(MAKE) -C src
+
+test: all
+	$(MAKE) -C test test
+
+clean:
+	$(MAKE) -C src  clean
+	$(MAKE) -C test clean
