@@ -21,3 +21,6 @@ setup.log
 
 # binaries
 /bin/*
+
+# generated files
+/src/lexer.ml
