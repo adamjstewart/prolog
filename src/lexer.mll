@@ -36,8 +36,10 @@ let atom =
 let digits = digit +
 let integers = sign ? digits
 let floats =
-      integers '.' digits (['e' 'E'] sign ? digits | "Inf") ?
+      integers '.' digits (['e' 'E'] sign ? digits) ?
     | integers ['e' 'E'] sign ? digits
+let inf = '+' ? digits '.' digits "Inf"
+let neg_inf = '-' digits '.' digits "Inf"
 
 (* Variables *)
 let variable = (upper_case | underline) alphanumerical *
@@ -54,6 +56,8 @@ rule token = parse
     (* Numbers *)
     | integers as n         { INT   (int_of_string   n) }
     | floats   as f         { FLOAT (float_of_string f) }
+    | inf                   { FLOAT infinity            }
+    | neg_inf               { FLOAT neg_infinity        }
 
     (* Strings *)
     | string_quote          { string_parser "" lexbuf }
