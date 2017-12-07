@@ -1,13 +1,21 @@
-(* File: common.ml *)
-
 (* Tokens *)
 type token =
+    (* Constants *)
       ATOM of string
     | INT of int
-    | RAT of int * int
     | FLOAT of float
-    | VAR of string
     | STRING of string
+    (* Variables *)
+    | VAR of string
+    (* Symbols *)
+    | RULE      (* :- *)
+    | QUERY     (* ?- *)
+    | PERIOD    (* .  *)
+    | LPAREN    (* (  *)
+    | RPAREN    (* )  *)
+    | COMMA     (* ,  *)
+    | SEMICOLON (* ;  *)
+    (* Meta-characters *)
     | EOF
 
 (* Constants *)
