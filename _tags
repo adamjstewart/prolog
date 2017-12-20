@@ -1,6 +1,9 @@
 # For colors in compiler messages. Mode can be auto, always, or never
 true: color(always)
 
+# Use menhir instead of ocamlyacc
+true: use_menhir
+
 # Module paths to include
 "src": include
 "tests": include
