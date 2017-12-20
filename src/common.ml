@@ -44,6 +44,6 @@ type head =
 (* Expressions: facts adn rules can become one later but this is fine *)
 type exp =
       Fact of head               (* facts ie. cat(tom). *)
-    | Rule of head * body       (* rules ie. cat(tom) :- true. *)
+    | Rule of head * pred       (* rules ie. cat(tom) :- true. *)
 
 
