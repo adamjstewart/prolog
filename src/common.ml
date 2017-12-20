@@ -18,19 +18,32 @@ type token =
     (* Meta-characters *)
     | EOF
 
+(* Declarations *)
+type dec:
+      Clause of exp           (* for adding facts/rules to db *)
+    | Query of exp            (* for querying db *) 
+
+
 (* Constants *)
-type const =
-      AtomConst of string    (* atoms    *)
+type atomic =
+      Term of string * atomic list    (* atoms and compound terms *)
+    | Variable of string             (* vatiables *)     
+    | BoolConst of bool              (* booleans *)
     | IntConst of int        (* integers *)
     | FloatConst of float    (* floats   *)
     | StringConst of string  (* strings  *)
-    | BoolConst of bool      (* booleans *)
 
-(* Expressions *)
+(* body of a rule*)
+type pred =
+      Single of atomic               (* ie cat(X) *)
+    | Conjunction of pred * pred     (* ie parent_child(Z, X), parent_child(Z, Y) *)
+    | Disjunction of pred * pred     (* ie parent_child(Z, X); parent_child(Z, Y) *)
+(* head of a rule*)
+type head =
+      Head of atomic 
+(* Expressions: facts adn rules can become one later but this is fine *)
 type exp =
-      VarExp of string              (* variables                *)
-    | ConstExp of const             (* constants                *)
-    | RuleExp of exp * exp          (* Head :- Body.            *)
-    | FactExp of exp                (* Head.                    *)
-    | CompoundTermExp of exp * exp  (* functor(arg1, arg2, ...) *)
-    | ListExp of exp * exp          (* arg1, arg2               *)
+      Fact of head               (* facts ie. cat(tom). *)
+    | Rule of head * pred       (* rules ie. cat(tom) :- true. *)
+
+
