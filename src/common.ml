@@ -37,3 +37,10 @@ type exp =
 type dec =
     | Clause of exp * exp   (* Head :- Body. *)
     | Query of exp          (* ?- Body.      *)
+
+(* Results *)
+type res =
+    | ClauseRes of dec list
+ (* | QueryRes of *)  (*have to figure this out*)
+
+               
