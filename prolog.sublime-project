@@ -1,0 +1,24 @@
+{
+	"folders":
+	[
+		{
+			"path": ".",
+            "folder_exclude_patterns": [
+                "_build"
+            ],
+            "file_exclude_patterns": [
+                "*.annot",
+                "*.cmo",
+                "*.cma",
+                "*.cmi",
+                "*.a",
+                "*.o",
+                "*.cmx",
+                "*.cmxs",
+                "*.cmxa",
+                "*.byte",
+                "*.native"
+            ]
+		}
+	]
+}
