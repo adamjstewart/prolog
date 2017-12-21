@@ -1,5 +1,5 @@
 (* Tokens *)
-type token =
+type tok =
     (* Constants *)
     | ATOM of string
     | INT of int
@@ -42,5 +42,3 @@ type dec =
 type res =
     | ClauseRes of dec list
  (* | QueryRes of *)  (*have to figure this out*)
-
-               
