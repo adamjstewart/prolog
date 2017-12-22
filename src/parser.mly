@@ -72,11 +72,12 @@ predicate_list:
 
 predicate:
     | a = ATOM                                          { atom_sugar a }
-    | a = ATOM; LPAREN; tl = term_list; RPAREN          { TermExp (a, tl) }
+    | s = structure                                     { s }
 
 term_list:
+    |                                                   { [] }
     | t = term                                          { [t] }
-    | tl = term_list; COMMA; t = term                   { tl @ [t] }
+    | t = term; COMMA; tl = term_list                   { t :: tl }
 
 term:
     | c = constant                                      { ConstExp c }

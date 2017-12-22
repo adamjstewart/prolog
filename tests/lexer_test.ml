@@ -1,6 +1,7 @@
 open OUnit2
 open Common
 open Lexer
+open Parser
 
 
 let lexer_test_suite =
@@ -68,10 +69,24 @@ let lexer_test_suite =
             ";",        [SEMICOLON];
 
             (* Combinations *)
-            "cat(tom).",            [ATOM "cat"; LPAREN; ATOM "tom"; RPAREN; PERIOD];
-            "cat(tom) :- true.",    [ATOM "cat"; LPAREN; ATOM "tom"; RPAREN; RULE; ATOM "true"; PERIOD];
-            "?- cat(tom).",         [QUERY; ATOM "cat"; LPAREN; ATOM "tom"; RPAREN; PERIOD];
-            "?- cat(X).",           [QUERY; ATOM "cat"; LPAREN; VAR "X"; RPAREN; PERIOD];
+            "cat(tom).", [
+                ATOM "cat"; LPAREN; ATOM "tom"; RPAREN; PERIOD
+            ];
+            "cat(tom) :- true.", [
+                ATOM "cat"; LPAREN; ATOM "tom"; RPAREN; RULE; ATOM "true"; PERIOD
+            ];
+            "cat(tom):-true.", [
+                ATOM "cat"; LPAREN; ATOM "tom"; RPAREN; RULE; ATOM "true"; PERIOD
+            ];
+            "?- cat(tom).", [
+                QUERY; ATOM "cat"; LPAREN; ATOM "tom"; RPAREN; PERIOD
+            ];
+            "?- cat(X).", [
+                QUERY; ATOM "cat"; LPAREN; VAR "X"; RPAREN; PERIOD
+            ];
+            "?-cat(X).", [
+                QUERY; ATOM "cat"; LPAREN; VAR "X"; RPAREN; PERIOD
+            ];
             "sibling(X, Y) :- parent_child(Z, X), parent_child(Z, Y).", [
                 ATOM "sibling"; LPAREN; VAR "X"; COMMA; VAR "Y"; RPAREN; RULE;
                 ATOM "parent_child"; LPAREN; VAR "Z"; COMMA; VAR "X"; RPAREN; COMMA;
