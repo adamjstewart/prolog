@@ -20,25 +20,42 @@
         )
 %}
 
-(* Refer to:
+/* Refer to:
 
    https://www.cs.uni-potsdam.de/wv/lehre/Material/Prolog/Eclipse-Doc/userman/node140.html
    https://github.com/simonkrenger/ch.bfh.bti7064.w2013.PrologParser/blob/master/doc/prolog-bnf-grammar.txt
 
-   for description of grammar *)
+   for a description of the grammar */
 
-(* Tokens *)
+/* Tokens */
+
+/* Constants */
 %token <int> INT
 %token <float> FLOAT
-%token <string> STRING ATOM VAR
-%token RULE QUERY PERIOD LPAREN RPAREN COMMA SEMICOLON
+%token <string> STRING ATOM
 
-(* Start symbols *)
+/* Variables */
+%token <string> VAR
+
+/* Symbols */
+%token RULE       /* :- */
+%token QUERY      /* ?- */
+%token PERIOD     /* .  */
+%token LPAREN     /* (  */
+%token RPAREN     /* )  */
+%token COMMA      /* ,  */
+%token SEMICOLON  /* ;  */
+
+/* Meta-characters */
+%token EOF
+
+/* Start symbols */
 %start clause
 
-(* Types *)
+/* Types */
 %type <Common.dec> clause
 %type <Common.exp> predicate_list predicate term structure
+%type <Common.exp list> term_list
 %type <Common.const> constant
 
 %%

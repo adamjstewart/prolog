@@ -1,4 +1,5 @@
-OCB = ocamlbuild -use-ocamlfind
+MENHIR = menhir --unused-token EOF
+OCB = ocamlbuild -use-ocamlfind -menhir "$(MENHIR)"
 
 
 .PHONY: all native byte test clean

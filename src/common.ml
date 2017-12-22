@@ -1,23 +1,3 @@
-(* Tokens *)
-type tok =
-    (* Constants *)
-    | ATOM of string
-    | INT of int
-    | FLOAT of float
-    | STRING of string
-    (* Variables *)
-    | VAR of string
-    (* Symbols *)
-    | RULE      (* :- *)
-    | QUERY     (* ?- *)
-    | PERIOD    (* .  *)
-    | LPAREN    (* (  *)
-    | RPAREN    (* )  *)
-    | COMMA     (* ,  *)
-    | SEMICOLON (* ;  *)
-    (* Meta-characters *)
-    | EOF
-
 (* Constants *)
 type const =
     | IntConst of int        (* integers *)
