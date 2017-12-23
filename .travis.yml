@@ -13,7 +13,7 @@ env:
 addons:
   apt:
     sources:
-      - ppa:avsm/ppa
+      - sourceline: 'ppa:avsm/ppa'
     packages:
       - opam
 
