@@ -1,5 +1,7 @@
 # prolog
 
+[![Build Status](https://travis-ci.org/adamjstewart/prolog.svg?branch=master)](https://travis-ci.org/adamjstewart/prolog)
+
 An implementation of Prolog written in OCaml
 
 ## Dependencies

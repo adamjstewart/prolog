@@ -40,7 +40,6 @@ let lexer_test_suite =
             (* Numbers *)
             "1",        [INT 1];
             "39",       [INT 39];
-            "+48",      [INT (+48)];
             "-320",     [INT (-320)];
 
             "3.2",      [FLOAT 3.2];

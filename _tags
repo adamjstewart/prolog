@@ -9,4 +9,4 @@ true: use_menhir
 "tests": include
 
 # OUnit is required for unit tests
-<tests/*>: package(ounit)
+<tests/*>: package(oUnit)
