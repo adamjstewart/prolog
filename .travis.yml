@@ -12,6 +12,8 @@ env:
 # Install OPAM
 addons:
   apt:
+    sources:
+      - ppa:avsm/ppa
     packages:
       - opam
 
