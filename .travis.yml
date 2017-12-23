@@ -37,7 +37,7 @@ before_script:
   - which opam
   - env
   - ocamlfind list
-  - ocamlfind query ounit
+  - ocamlfind query oUnit
 
 # Build and run the test suite
 script:
@@ -45,6 +45,6 @@ script:
   - which opam
   - env
   - ocamlfind list
-  - ocamlfind query ounit
+  - ocamlfind query oUnit
   - make
   - make test
