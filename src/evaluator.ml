@@ -1,15 +1,12 @@
-open Common
-
+open Ast
 
 
 let add_clause_to_db (dec,db) = match dec with Clause(h,b) -> ClauseRes((Clause(h,b))::db)
-  
+
 let eval_dec (dec, db) = match dec with Clause(h,b) -> add_clause_to_db(dec, db)
                                       | Query(b) -> raise (Failure "Not Implementing right now")
 
-
 (*Helper functions, maybe need to be refined more and put in common.ml*)
-
 let print_const x = match x with
   | IntConst(i)  -> print_int i; print_string ("\n")
   | FloatConst(f) -> print_float f; print_string ("\n")
@@ -27,8 +24,5 @@ and print_exp x = match x with
 let print_dec x = match x with Clause(h,b) -> print_string ("CLAUSE:\n"); print_exp (h); print_exp (b)
                              |  Query(b) -> raise (Failure "Not Implementing right now")
 
-
-
 let rec print_db x = match x with [] ->  ()
-                                | (y::ys) -> print_dec (y); print_db (ys) 
-
+                                | (y::ys) -> print_dec (y); print_db (ys)

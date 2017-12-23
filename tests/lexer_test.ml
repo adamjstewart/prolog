@@ -1,4 +1,5 @@
 open OUnit2
+open Ast
 open Common
 open Lexer
 open Parser
@@ -13,7 +14,9 @@ let lexer_test_suite =
                 in
                 title >:: (
                     fun test_ctxt ->
-                        assert_equal res (get_all_tokens arg)
+                        assert_equal
+                        ~printer:string_of_token_list
+                        res (get_all_tokens arg)
                 )
         )
         [
@@ -22,9 +25,15 @@ let lexer_test_suite =
             "red",          [ATOM "red"];
             "blueBook",     [ATOM "blueBook"];
             "mother_child", [ATOM "mother_child"];
-            "'Taco'",       [ATOM "'Taco'"];
-            "'some atom'",  [ATOM "'some atom'"];
+            "'Taco'",       [ATOM "Taco"];
+            "'some atom'",  [ATOM "some atom"];
             "foobar123",    [ATOM "foobar123"];
+            "'foo\"bar'",   [ATOM "foo\"bar"];
+            "'foo\"\\'bar'",[ATOM "foo\"'bar"];
+            "' \\t\\n '",   [ATOM " \t\n "];
+            "'\\a\\b\\f\\n\\r\\t\\v\\e\\d'", [
+                ATOM "\007\b\012\n\r\t\011\027\127"
+            ];
 
             (* Numbers *)
             "1",        [INT 1];
@@ -51,8 +60,10 @@ let lexer_test_suite =
 
             (* Strings *)
             "\"Hello, World!\"",                [STRING "Hello, World!"];
-            "\"Hello, \" \"World!\"",           [STRING "Hello, World!"];
+            "\"Hello,\" \"World!\"",            [STRING "Hello,World!"];
             "\"really long\\nwrapped line\"",   [STRING "really long\nwrapped line"];
+            "\"I'm can't\"",                    [STRING "I'm can't"];
+            "\"foo\\\"'bar\"",                  [STRING "foo\"'bar"];
 
             (* Variables *)
             "Cats",     [VAR "Cats"];
@@ -67,6 +78,19 @@ let lexer_test_suite =
             ")",        [RPAREN];
             ",",        [COMMA];
             ";",        [SEMICOLON];
+            ":- ?- ()", [RULE; QUERY; LPAREN; RPAREN];
+
+            (* Comments *)
+            "cat(tom). % tom is a cat\nmouse(jerry). % jerry is a mouse", [
+                ATOM "cat";   LPAREN; ATOM "tom";   RPAREN; PERIOD;
+                ATOM "mouse"; LPAREN; ATOM "jerry"; RPAREN; PERIOD
+            ];
+            "this line /* contains a\nmulti-line */ comment.", [
+                ATOM "this"; ATOM "line"; ATOM "comment"; PERIOD
+            ];
+            "this /* line /* contains /* several */ nested */ comments */ in a row", [
+                ATOM "this"; ATOM "in"; ATOM "a"; ATOM "row"
+            ];
 
             (* Combinations *)
             "cat(tom).", [
@@ -88,7 +112,12 @@ let lexer_test_suite =
                 QUERY; ATOM "cat"; LPAREN; VAR "X"; RPAREN; PERIOD
             ];
             "sibling(X, Y) :- parent_child(Z, X), parent_child(Z, Y).", [
-                ATOM "sibling"; LPAREN; VAR "X"; COMMA; VAR "Y"; RPAREN; RULE;
+                ATOM "sibling";      LPAREN; VAR "X"; COMMA; VAR "Y"; RPAREN; RULE;
+                ATOM "parent_child"; LPAREN; VAR "Z"; COMMA; VAR "X"; RPAREN; COMMA;
+                ATOM "parent_child"; LPAREN; VAR "Z"; COMMA; VAR "Y"; RPAREN; PERIOD
+            ];
+            "sibling(X,Y):-parent_child(Z,X),parent_child(Z,Y).", [
+                ATOM "sibling";      LPAREN; VAR "X"; COMMA; VAR "Y"; RPAREN; RULE;
                 ATOM "parent_child"; LPAREN; VAR "Z"; COMMA; VAR "X"; RPAREN; COMMA;
                 ATOM "parent_child"; LPAREN; VAR "Z"; COMMA; VAR "Y"; RPAREN; PERIOD
             ];

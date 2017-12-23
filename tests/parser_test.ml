@@ -1,6 +1,6 @@
 open OUnit2
+open Ast
 open Common
-open Main
 
 
 let parser_test_suite =
@@ -12,7 +12,9 @@ let parser_test_suite =
                 in
                 title >:: (
                     fun test_ctxt ->
-                        assert_equal res (parse arg)
+                        assert_equal
+                        ~printer:string_of_dec
+                        res (parse arg)
                 )
         )
         [

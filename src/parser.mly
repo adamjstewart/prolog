@@ -1,5 +1,5 @@
 %{
-    open Common
+    open Ast
 
     (* The fact:
            Head.
@@ -53,10 +53,10 @@
 %start clause
 
 /* Types */
-%type <Common.dec> clause
-%type <Common.exp> predicate_list predicate term structure
-%type <Common.exp list> term_list
-%type <Common.const> constant
+%type <Ast.dec> clause
+%type <Ast.exp> predicate_list predicate term structure
+%type <Ast.exp list> term_list
+%type <Ast.const> constant
 
 %%
 
