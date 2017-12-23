@@ -1,0 +1,34 @@
+# Travis CI does not have official OCaml support
+language: generic
+
+# Test with multiple versions of OCaml
+env:
+  - OCAML_VERSION=4.06
+  - OCAML_VERSION=4.05
+  - OCAML_VERSION=4.04
+  - OCAML_VERSION=4.03
+  - OCAML_VERSION=4.02
+
+# Install OPAM
+addons:
+  apt:
+    packages:
+      - opam
+
+# Switch to the specified version of OCaml
+before_install:
+  - opam switch "$OCAML_VERSION"
+  - ocaml -version
+  - opam --version
+
+# Install the required dependencies
+install:
+  - opam install ocamlfind
+  - opam install ocamlbuild
+  - opam install ounit
+  - opam install menhir
+
+# Build and run the test suite
+script:
+  - make
+  - make test
