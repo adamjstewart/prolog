@@ -1,5 +1,9 @@
 {
     open Parser
+
+    
+    exception EndInput
+
 }
 
 (* Refer to:
