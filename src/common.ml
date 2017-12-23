@@ -8,7 +8,7 @@ let parse s =
         let ast = clause Lexer.token lexbuf in
             ast
 
-(* Conversion functions *)
+(* String conversion functions *)
 let string_of_token t =
     match t with
     | INT    i  -> "INT "      ^ string_of_int i
