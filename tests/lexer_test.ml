@@ -21,19 +21,21 @@ let lexer_test_suite =
         )
         [
             (* Atoms *)
-            "x",            [ATOM "x"];
-            "red",          [ATOM "red"];
-            "blueBook",     [ATOM "blueBook"];
-            "mother_child", [ATOM "mother_child"];
-            "'Taco'",       [ATOM "Taco"];
-            "'some atom'",  [ATOM "some atom"];
-            "foobar123",    [ATOM "foobar123"];
-            "'foo\"bar'",   [ATOM "foo\"bar"];
-            "'foo\"\\'bar'",[ATOM "foo\"'bar"];
-            "' \\t\\n '",   [ATOM " \t\n "];
+            "x",                        [ATOM "x"];
+            "red",                      [ATOM "red"];
+            "blueBook",                 [ATOM "blueBook"];
+            "mother_child",             [ATOM "mother_child"];
+            "'Taco'",                   [ATOM "Taco"];
+            "'some atom'",              [ATOM "some atom"];
+            "foobar123",                [ATOM "foobar123"];
+            "'foo\"bar'",               [ATOM "foo\"bar"];
+            "'foo\"\\'bar'",            [ATOM "foo\"'bar"];
+            "' \\t\\n '",               [ATOM " \t\n "];
             "'\\a\\b\\f\\n\\r\\t\\v\\e\\d'", [
                 ATOM "\007\b\012\n\r\t\011\027\127"
             ];
+            "'\\125\\111\\125\\103'",   [ATOM "UIUC"];
+            "'\\x43\\\\x53\\'",         [ATOM "CS"];
 
             (* Numbers *)
             "1",        [INT 1];
@@ -64,6 +66,10 @@ let lexer_test_suite =
             "\"really long\\nwrapped line\"",   [STRING "really long\nwrapped line"];
             "\"I'm can't\"",                    [STRING "I'm can't"];
             "\"foo\\\"'bar\"",                  [STRING "foo\"'bar"];
+            "\" \\t\\n \"",                     [STRING " \t\n "];
+            "\"\\a\\b\\f\\n\\r\\t\\v\\e\\d\"",  [STRING "\007\b\012\n\r\t\011\027\127"];
+            "\"\\125\\111\\125\\103\"",         [STRING "UIUC"];
+            "\"\\x43\\\\x53\\\"",               [STRING "CS"];
 
             (* Variables *)
             "Cats",     [VAR "Cats"];

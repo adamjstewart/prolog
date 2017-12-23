@@ -121,9 +121,9 @@ and escaped callback acc = parse
     | end_of_line                       { callback acc lexbuf }
     | 'c' (blank_space | end_of_line) * { callback acc lexbuf }
     | octals as o                       { callback (acc ^ (String.make 1 (char_of_int (
-                                            int_of_string ("\\o" ^ o))))) lexbuf }
+                                            int_of_string ("0o" ^ o))))) lexbuf }
     | hexes as h                        { callback (acc ^ (String.make 1 (char_of_int (
-                                            int_of_string ("\\x" ^ (String.sub h 0 (
+                                            int_of_string ("0" ^ (String.sub h 0 (
                                                 (String.length h) - 1))))))) lexbuf }
 
 {
