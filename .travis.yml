@@ -9,7 +9,7 @@ env:
   - OCAML_VERSION=4.03.0
   - OCAML_VERSION=4.02.3
 
-# Install OPAM
+# Install OPAM from a newer PPA
 addons:
   apt:
     sources:
@@ -19,7 +19,7 @@ addons:
 
 # Switch to the specified version of OCaml
 before_install:
-  - opam init --comp="$OCAML_VERSION"
+  - opam init -a --comp="$OCAML_VERSION"
   - ocaml -version
   - opam --version
 
