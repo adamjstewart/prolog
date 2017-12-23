@@ -19,16 +19,17 @@ addons:
 
 # Switch to the specified version of OCaml
 before_install:
-  - opam init -a --comp="$OCAML_VERSION"
+  - opam init --auto-setup --comp="$OCAML_VERSION"
+  - eval $(opam config env)
   - ocaml -version
   - opam --version
 
 # Install the required dependencies
 install:
-  - opam install ocamlfind
-  - opam install ocamlbuild
-  - opam install ounit
-  - opam install menhir
+  - opam install --yes ocamlfind
+  - opam install --yes ocamlbuild
+  - opam install --yes ounit
+  - opam install --yes menhir
 
 # Build and run the test suite
 script:
