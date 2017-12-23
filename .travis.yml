@@ -17,7 +17,7 @@ addons:
 
 # Switch to the specified version of OCaml
 before_install:
-  - opam init --compiler="$OCAML_VERSION"
+  - opam init --comp="$OCAML_VERSION"
   - ocaml -version
   - opam --version
 
