@@ -33,8 +33,18 @@ before_script:
   - eval $(opam config env)
   - ocaml -version
   - opam --version
+  - which ocaml
+  - which opam
+  - env
+  - ocamlfind list
+  - ocamlfind query ounit
 
 # Build and run the test suite
 script:
+  - which ocaml
+  - which opam
+  - env
+  - ocamlfind list
+  - ocamlfind query ounit
   - make
   - make test
