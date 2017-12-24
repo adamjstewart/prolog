@@ -1,6 +1,7 @@
 # prolog
 
 [![Build Status](https://travis-ci.org/adamjstewart/prolog.svg?branch=master)](https://travis-ci.org/adamjstewart/prolog)
+[![Coverage Status](https://coveralls.io/repos/github/adamjstewart/prolog/badge.svg?branch=master)](https://coveralls.io/github/adamjstewart/prolog?branch=master)
 
 An implementation of Prolog written in OCaml
 
