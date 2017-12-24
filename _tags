@@ -10,3 +10,7 @@ true: use_menhir
 
 # OUnit is required for unit tests
 <tests/*>: package(oUnit)
+
+# Integrate bisect_ppx for coverage analysis
+<src/*>: coverage
+<tests/test.{byte,native}>: coverage

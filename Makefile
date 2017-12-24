@@ -1,5 +1,5 @@
 MENHIR = menhir --unused-token EOF
-OCB = ocamlbuild -use-ocamlfind -menhir "$(MENHIR)"
+OCB = ocamlbuild -use-ocamlfind -plugin-tag 'package(bisect_ppx-ocamlbuild)' -menhir "$(MENHIR)"
 
 
 .PHONY: all native byte test clean
@@ -19,3 +19,4 @@ test:
 
 clean:
 	$(OCB) -clean
+	@rm -f *.out

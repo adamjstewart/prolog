@@ -17,7 +17,8 @@
                 "*.cmxs",
                 "*.cmxa",
                 "*.byte",
-                "*.native"
+                "*.native",
+                "*.out"
             ]
 		}
 	]

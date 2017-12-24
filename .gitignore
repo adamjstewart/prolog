@@ -14,3 +14,6 @@ _build/
 # ocamlbuild targets
 *.byte
 *.native
+
+# bisect_ppx output
+*.out
