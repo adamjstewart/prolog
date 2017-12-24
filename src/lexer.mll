@@ -1,9 +1,8 @@
 {
     open Parser
 
-    
-    exception EndInput
 
+    exception EndInput
 }
 
 (* Refer to:
@@ -90,7 +89,6 @@ rule token = parse
 and comments count = parse
     | open_comment          { comments (1 + count) lexbuf }
     | close_comment         { match count with
-                              | 0 -> raise (Failure "Solution error")
                               | 1 -> token lexbuf
                               | n -> comments (n - 1) lexbuf
                             }
@@ -139,4 +137,9 @@ and escaped callback acc = parse
                 | EOF -> []
                 | t -> t :: g () in
                     g ()
+
+    (* Takes a string s and returns Some of a list of tokens or None *)
+    let try_get_all_tokens s =
+        try Some (get_all_tokens s) with
+        | Failure _ -> None
 }

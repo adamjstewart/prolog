@@ -34,6 +34,9 @@ let lexer_test_suite =
             "'\\a\\b\\f\\n\\r\\t\\v\\e\\d'", [
                 ATOM "\007\b\012\n\r\t\011\027\127"
             ];
+            "'\\\\'",                   [ATOM "\\"];
+            "'\\\n'",                   [ATOM ""];
+            "'\\c   \n   \n  '",        [ATOM ""];
             "'\\125\\111\\125\\103'",   [ATOM "UIUC"];
             "'\\x43\\\\x53\\'",         [ATOM "CS"];
 
@@ -67,6 +70,9 @@ let lexer_test_suite =
             "\"foo\\\"'bar\"",                  [STRING "foo\"'bar"];
             "\" \\t\\n \"",                     [STRING " \t\n "];
             "\"\\a\\b\\f\\n\\r\\t\\v\\e\\d\"",  [STRING "\007\b\012\n\r\t\011\027\127"];
+            "\"\\\\\"",                         [STRING "\\"];
+            "\"\\\n\"",                         [STRING ""];
+            "\"\\c   \n   \n  \"",              [STRING ""];
             "\"\\125\\111\\125\\103\"",         [STRING "UIUC"];
             "\"\\x43\\\\x53\\\"",               [STRING "CS"];
 
@@ -126,5 +132,28 @@ let lexer_test_suite =
                 ATOM "parent_child"; LPAREN; VAR "Z"; COMMA; VAR "X"; RPAREN; COMMA;
                 ATOM "parent_child"; LPAREN; VAR "Z"; COMMA; VAR "Y"; RPAREN; PERIOD
             ];
+        ]
+    )
+
+let lexer_failure_test_suite =
+    "Lexer_failure" >::: (
+        List.map (
+            fun arg ->
+                let title =
+                    arg
+                in
+                title >:: (
+                    fun test_ctxt ->
+                        assert_equal
+                        None (try_get_all_tokens arg)
+                )
+        )
+        [
+            (* Comments *)
+            "*/";
+            "/* */ */";
+
+            "/*";
+            "/* /* */";
         ]
     )
