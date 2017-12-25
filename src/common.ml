@@ -52,13 +52,11 @@ let string_of_dec d =
     | Clause (e1, e2) -> "Clause (" ^ (string_of_exp e1) ^ ", " ^ (string_of_exp e2) ^ ")"
     | Query e -> "Query (" ^ (string_of_exp e) ^ ")"
 
-let rec string_of_db db =
-    match db with
-    | [] -> ""
-    | (x::xs) -> (match xs with [] -> (string_of_dec x) 
-                           | (y::ys) -> (string_of_dec x) ^ " , " ^  (string_of_db xs) )
-let rec print_db db =
-    print_string ("[ " ^ (string_of_db db) ^ " ]\n")
+let string_of_db db =
+    "[" ^ (String.concat "; " (List.map string_of_dec db)) ^ "]"
+
+let print_db db =
+    print_endline (string_of_db db)
 
 let string_of_res r =
     raise (Failure "Not implemented yet")

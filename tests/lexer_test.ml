@@ -1,5 +1,4 @@
 open OUnit2
-open Ast
 open Common
 open Lexer
 open Parser
