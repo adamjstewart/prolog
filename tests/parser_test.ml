@@ -100,5 +100,64 @@ let parser_test_suite =
             "?- sibling(sally, erica).", (
                 Query (TermExp ("sibling", [TermExp ("sally", []); TermExp ("erica", [])]))
             );
+
+            (* Combinations *)
+            "cat(tom). animal(X) :- cat(X). ?- animal(X).", (
+                Clause (TermExp ("cat", [TermExp ("tom", [])]), ConstExp (BoolConst true))
+            );
+        ]
+    )
+
+let parser_failure_test_suite =
+    "Parser_failure" >::: (
+        List.map (
+            fun arg ->
+                let title =
+                    arg
+                in
+                title >:: (
+                    fun test_ctxt ->
+                        assert_equal
+                        None (try_parse arg)
+                )
+        )
+        [
+            (* Empty string *)
+            "";
+
+            (* Constants *)
+            "9";
+            "3.14";
+            "\"Merry Christmas\"";
+            "VAR";
+
+            (* Facts *)
+            ".";
+            "cat";
+            "cat(,";
+            "cat(.";
+            "cat(:-";
+            "cat(,";
+            "cat((";
+            "coord(X, Y, Z)";
+            "coord(X, Y, Z.";
+            "coord X, Y, Z).";
+            "coord X, Y, Z.";
+            "coord(X Y Z).";
+            "coord(X; Y; Z).";
+            "VAR().";
+
+            (* Rules *)
+            ":-";
+            ":- cat(X).";
+            "cat(X) :-.";
+            "parent_child(Z, X), parent_child(Z, Y) :- sibling(X, Y).";
+            "parent_child(Z, X); parent_child(Z, Y) :- sibling(X, Y).";
+
+            (* Queries *)
+            "?-";
+            "?- 9.";
+            "cat(tom) ?-";
+            "cat(tom) ?- mouse(jerry)";
         ]
     )

@@ -73,5 +73,11 @@ let common_test_suite =
                 Clause (TermExp ("foo", []), ConstExp (BoolConst true));
                 Query (TermExp ("bar", []))
             ], "[Clause (TermExp (\"foo\", []), ConstExp (BoolConst true)); Query (TermExp (\"bar\", []))]";
+
+            (print_db [
+                Clause (TermExp ("foo", []), ConstExp (BoolConst true));
+                Query (TermExp ("bar", []))
+            ]; "print_db"), "print_db";
+
         ]
     )

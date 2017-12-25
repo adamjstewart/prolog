@@ -19,6 +19,11 @@ let lexer_test_suite =
                 )
         )
         [
+            (* Empty string *)
+            "",                         [];
+            "\n",                       [];
+            "\t",                       [];
+
             (* Atoms *)
             "x",                        [ATOM "x"];
             "red",                      [ATOM "red"];

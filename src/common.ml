@@ -8,6 +8,11 @@ let parse s =
         let ast = clause Lexer.token lexbuf in
             ast
 
+(* Takes a string s and returns Some of an abstract syntax tree or None *)
+let try_parse s =
+    try Some (parse s) with
+    | Error -> None
+
 (* String conversion functions *)
 let string_of_token t =
     match t with
