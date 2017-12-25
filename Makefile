@@ -17,9 +17,9 @@ test:
 	$(OCB) test.byte
 	./test.byte
 
-coverage:
-	BISECT_COVERAGE=YES \
-	BISECT_FILE=_build/coverage \
+coverage: export BISECT_COVERAGE=YES
+coverage: export BISECT_FILE=_build/coverage
+coverage: clean
 	$(OCB) test.byte
 	./test.byte
 	bisect-ppx-report -I _build -html _build _build/coverage*.out
