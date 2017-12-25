@@ -75,4 +75,3 @@ let common_test_suite =
             ], "[Clause (TermExp (\"foo\", []), ConstExp (BoolConst true)); Query (TermExp (\"bar\", []))]";
         ]
     )
-

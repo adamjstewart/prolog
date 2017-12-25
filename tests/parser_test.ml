@@ -37,6 +37,35 @@ let parser_test_suite =
                     ConstExp (BoolConst true)
                 )
             );
+            "coord(1, 2, 3).", (
+                Clause (
+                    TermExp ("coord", [
+                        ConstExp (IntConst 1);
+                        ConstExp (IntConst 2);
+                        ConstExp (IntConst 3)
+                    ]),
+                    ConstExp (BoolConst true)
+                )
+            );
+            "coord(1.0, 2.0, 3.0).", (
+                Clause (
+                    TermExp ("coord", [
+                        ConstExp (FloatConst 1.);
+                        ConstExp (FloatConst 2.);
+                        ConstExp (FloatConst 3.)
+                    ]),
+                    ConstExp (BoolConst true)
+                )
+            );
+            "cousins(\"jack\", \"jill\").", (
+                Clause (
+                    TermExp ("cousins", [
+                        ConstExp (StringConst "jack");
+                        ConstExp (StringConst "jill")
+                    ]),
+                    ConstExp (BoolConst true)
+                )
+            );
 
             (* Rules *)
             "animal(X) :- cat(X).", (
