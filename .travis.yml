@@ -15,8 +15,8 @@ addons:
     sources:
       - sourceline: 'ppa:avsm/ocaml42+opam12'
     packages:
+      - aspcud
       - opam
-      - apt-cudf
       - python3-pip
 
 # Install the specified version of OCaml
