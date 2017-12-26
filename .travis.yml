@@ -30,9 +30,8 @@ install:
   - opam install --yes bisect_ppx
   - opam install --yes bisect_ppx-ocamlbuild
   - opam install --yes ocveralls
-  - pip install --upgrade pip
-  - pip install --upgrade sphinx
-  - pip install --upgrade sphinx_rtd_theme
+  - pip install --user sphinx
+  - pip install --user sphinx_rtd_theme
 
 # Set the appropriate environment variables
 before_script:
