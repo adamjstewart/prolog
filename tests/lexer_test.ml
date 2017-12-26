@@ -159,5 +159,9 @@ let lexer_failure_test_suite =
 
             "/*";
             "/* /* */";
+
+            (* Invalid characters *)
+            "\r";
+            "\b";
         ]
     )

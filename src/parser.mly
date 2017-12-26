@@ -74,8 +74,11 @@ predicate:
     | a = ATOM                                          { atom_sugar a }
     | s = structure                                     { s }
 
+structure:
+    | a = ATOM; LPAREN; RPAREN                          { atom_sugar a }
+    | a = ATOM; LPAREN; tl = term_list; RPAREN          { TermExp (a, tl) }
+
 term_list:
-    |                                                   { [] }
     | t = term                                          { [t] }
     | t = term; COMMA; tl = term_list                   { t :: tl }
 
@@ -84,9 +87,6 @@ term:
     | a = ATOM                                          { atom_sugar a }
     | v = VAR                                           { VarExp v }
     | s = structure                                     { s }
-
-structure:
-    | a = ATOM; LPAREN; tl = term_list; RPAREN          { TermExp (a, tl) }
 
 constant:
     | i = INT                                           { IntConst i }

@@ -28,6 +28,9 @@ let parser_test_suite =
             "cat(tom).", (
                 Clause (TermExp ("cat", [TermExp ("tom", [])]), ConstExp (BoolConst true))
             );
+            "cat(tom()).", (
+                Clause (TermExp ("cat", [TermExp ("tom", [])]), ConstExp (BoolConst true))
+            );
             "cat(X).", (
                 Clause (TermExp ("cat", [VarExp "X"]), ConstExp (BoolConst true))
             );
@@ -89,6 +92,54 @@ let parser_test_suite =
                     )
                 )
             );
+            "nonsense_words :- foo, bar, baz.", (
+                Clause (
+                    TermExp ("nonsense_words", []),
+                    ConjunctionExp (
+                        ConjunctionExp (
+                            TermExp ("foo", []),
+                            TermExp ("bar", [])
+                        ),
+                        TermExp ("baz", [])
+                    )
+                )
+            );
+            "nonsense_words :- foo; bar; baz.", (
+                Clause (
+                    TermExp ("nonsense_words", []),
+                    DisjunctionExp (
+                        DisjunctionExp (
+                            TermExp ("foo", []),
+                            TermExp ("bar", [])
+                        ),
+                        TermExp ("baz", [])
+                    )
+                )
+            );
+            "nonsense_words :- foo, bar; baz.", (
+                Clause (
+                    TermExp ("nonsense_words", []),
+                    DisjunctionExp (
+                        ConjunctionExp (
+                            TermExp ("foo", []),
+                            TermExp ("bar", [])
+                        ),
+                        TermExp ("baz", [])
+                    )
+                )
+            );
+            "nonsense_words :- foo; bar, baz.", (
+                Clause (
+                    TermExp ("nonsense_words", []),
+                    ConjunctionExp (
+                        DisjunctionExp (
+                            TermExp ("foo", []),
+                            TermExp ("bar", [])
+                        ),
+                        TermExp ("baz", [])
+                    )
+                )
+            );
 
             (* Queries *)
             "?- cat(tom).", (
@@ -99,6 +150,22 @@ let parser_test_suite =
             );
             "?- sibling(sally, erica).", (
                 Query (TermExp ("sibling", [TermExp ("sally", []); TermExp ("erica", [])]))
+            );
+            "?- sibling(sally, erica), sibling(john, joe).", (
+                Query (
+                    ConjunctionExp (
+                        TermExp ("sibling", [TermExp ("sally", []); TermExp ("erica", [])]),
+                        TermExp ("sibling", [TermExp ("john",  []); TermExp ("joe",   [])])
+                    )
+                )
+            );
+            "?- sibling(sally, erica); sibling(john, joe).", (
+                Query (
+                    DisjunctionExp (
+                        TermExp ("sibling", [TermExp ("sally", []); TermExp ("erica", [])]),
+                        TermExp ("sibling", [TermExp ("john",  []); TermExp ("joe",   [])])
+                    )
+                )
             );
 
             (* Combinations *)
@@ -134,23 +201,31 @@ let parser_failure_test_suite =
             (* Facts *)
             ".";
             "cat";
-            "cat(,";
-            "cat(.";
-            "cat(:-";
-            "cat(,";
+            "cat 9";
+            "cat,";
+            "cat:-";
+            "cat;";
             "cat((";
+            "cat(X.";
+            "cat(, X).";
+            "(cat).";
+            "cat, dog.";
+            "cat; dog.";
             "coord(X, Y, Z)";
             "coord(X, Y, Z.";
             "coord X, Y, Z).";
             "coord X, Y, Z.";
             "coord(X Y Z).";
             "coord(X; Y; Z).";
+            "coord(X, Y, Z, ).";
+            "coord(, X, Y, Z).";
             "VAR().";
 
             (* Rules *)
             ":-";
             ":- cat(X).";
             "cat(X) :-.";
+            "cat() :- cat() cat().";
             "parent_child(Z, X), parent_child(Z, Y) :- sibling(X, Y).";
             "parent_child(Z, X); parent_child(Z, Y) :- sibling(X, Y).";
 
@@ -158,6 +233,8 @@ let parser_failure_test_suite =
             "?-";
             "?- 9.";
             "cat(tom) ?-";
-            "cat(tom) ?- mouse(jerry)";
+            "cat(tom) ?- mouse(jerry).";
+            "cat(tom), dog(spike) ?- mouse(jerry).";
+            "cat(tom); dog(spike) ?- mouse(jerry).";
         ]
     )
