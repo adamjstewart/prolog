@@ -17,6 +17,7 @@ addons:
     packages:
       - opam
       - apt-cudf
+      - python3
 
 # Install the specified version of OCaml
 before_install:
@@ -31,10 +32,9 @@ install:
   - opam install --yes bisect_ppx
   - opam install --yes bisect_ppx-ocamlbuild
   - opam install --yes ocveralls
-  - pip install --user --upgrade pip
-  - pip install --user --upgrade requests>=2.4.1
-  - pip install --user --upgrade sphinx
-  - pip install --user --upgrade sphinx_rtd_theme
+  - pip3 install --user --upgrade pip
+  - pip3 install --user --upgrade sphinx
+  - pip3 install --user --upgrade sphinx_rtd_theme
 
 # Set the appropriate environment variables
 before_script:
@@ -48,7 +48,7 @@ before_script:
 script:
   - make
   - make test
-  - cd docs && make html SPHINXOPTS=-W
+  - make docs
 
 # Report coverage metrics to Coveralls
 after_success:
