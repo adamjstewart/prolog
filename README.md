@@ -32,8 +32,8 @@ $ opam install ocveralls
 
 Additionally, in order to build the documentation, the following dependencies are required:
 
-* [Sphinx](http://www.sphinx-doc.org/en/stable/) for building the documentation
-* [Sphinx_rtd_theme](https://github.com/rtfd/sphinx_rtd_theme) for the HTML theme
+* [Sphinx](https://pypi.python.org/pypi/Sphinx) for building the documentation
+* [Sphinx_rtd_theme](https://pypi.python.org/pypi/sphinx_rtd_theme) for the HTML theme
 * [LaTeX](https://www.latex-project.org/) for building a PDF version
 
 The recommended way to install these dependencies is with [pip](https://pip.pypa.io/en/stable/):

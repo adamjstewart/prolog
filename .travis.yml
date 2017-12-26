@@ -16,6 +16,7 @@ addons:
       - sourceline: 'ppa:avsm/ocaml42+opam12'
     packages:
       - opam
+      - apt-cudf
 
 # Install the specified version of OCaml
 before_install:
@@ -30,6 +31,7 @@ install:
   - opam install --yes bisect_ppx
   - opam install --yes bisect_ppx-ocamlbuild
   - opam install --yes ocveralls
+  - pip install --user requests
   - pip install --user sphinx
   - pip install --user sphinx_rtd_theme
 
