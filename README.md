@@ -71,9 +71,8 @@ $ make coverage
 
 ## Documentation
 
-To build the documentation, simply run `make html`:
+To build the documentation, simply run `make docs`:
 
 ```
-$ cd docs
-$ make html
+$ make docs
 ```
