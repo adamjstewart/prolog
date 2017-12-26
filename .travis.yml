@@ -30,6 +30,9 @@ install:
   - opam install --yes bisect_ppx
   - opam install --yes bisect_ppx-ocamlbuild
   - opam install --yes ocveralls
+  - pip install --upgrade pip
+  - pip install --upgrade sphinx
+  - pip install --upgrade sphinx_rtd_theme
 
 # Set the appropriate environment variables
 before_script:
@@ -43,6 +46,7 @@ before_script:
 script:
   - make
   - make test
+  - cd docs && make html SPHINXOPTS=-W
 
 # Report coverage metrics to Coveralls
 after_success:

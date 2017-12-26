@@ -17,7 +17,7 @@ This project depends on the following OCaml libraries:
 * [Bisect_ppx-ocamlbuild](https://opam.ocaml.org/packages/bisect_ppx-ocamlbuild/) for integration between Bisect_ppx and OCamlbuild
 * [OCveralls](https://opam.ocaml.org/packages/ocveralls/) for uploading coverage reports to [Coveralls](https://coveralls.io/)
 
-The recommended way to install these dependencies is with OPAM:
+The recommended way to install these dependencies is with [OPAM](https://opam.ocaml.org/):
 
 ```
 $ opam install ocamlfind
@@ -27,6 +27,19 @@ $ opam install menhir
 $ opam install bisect_ppx
 $ opam install bisect_ppx-ocamlbuild
 $ opam install ocveralls
+```
+
+Additionally, in order to build the documentation, the following dependencies are required:
+
+* [Sphinx](http://www.sphinx-doc.org/en/stable/) for building the documentation
+* [Sphinx_rtd_theme](https://github.com/rtfd/sphinx_rtd_theme) for the HTML theme
+* [LaTeX](https://www.latex-project.org/) for building a PDF version
+
+The recommended way to install these dependencies is with [pip](https://pip.pypa.io/en/stable/):
+
+```
+$ pip install sphinx
+$ pip install sphinx_rtd_theme
 ```
 
 ## Installation
@@ -45,4 +58,21 @@ To run the test-suite, simply run `make test`:
 
 ```
 $ make test
+```
+
+## Coverage
+
+To generate and view the coverage reports in your web browser, simply run `make coverage`:
+
+```
+$ make coverage
+```
+
+## Documentation
+
+To build the documentation, simply run `make html`:
+
+```
+$ cd docs
+$ make html
 ```
