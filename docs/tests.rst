@@ -6,15 +6,77 @@ When building a complex project like an interpreter, stability is crucial. Our p
 Unit Tests
 ----------
 
-In order to write unit tests, we used the [OUnit](http://ounit.forge.ocamlcore.org) unit test framework for OCaml. OUnit provides several convenience functions for writing simple test suites. It also provides several useful command-line arguments to enable more specific testing requests.
+In order to write unit tests, we used the `OUnit <http://ounit.forge.ocamlcore.org>`_ unit test framework for OCaml. OUnit provides several convenience functions for writing simple test suites. It also provides useful command-line arguments to enable more specific testing requests.
 
-All unit tests can be found in the ``tests`` directory.
+All unit tests can be found in the ``tests`` directory. ``test.ml`` is the main testing file, which ties together all of the other testing files. Each ``<file>`` in source has a corresponding testing suite: ``<file>_test.ml``. For example, tests for the lexer can be found in ``lexer_test.ml``.
+
+Not only do our unit tests ensure that each component of the project is working correctly, they also ensure that inputs that are supposed to fail do in fact fail. In ``lexer_test.ml`` and ``parser_test.ml``, there are two test suites: one for test cases that are expected to pass and another for test cases that are expected to fail. This is important to ensure that things like nested comments and term lists work correctly.
+
+In order to build and run the unit tests, simply run:
+
+.. code-block:: console
+
+   $ make test
+
+
+This will run the full test suite. If you only want to run a subset of the tests, you can see a list of available tests by running:
+
+.. code-block:: console
+
+   $ ./test.byte -list-test
+
+
+If you only want to run the lexer tests, for example, you would run:
+
+.. code-block:: console
+
+   $ ./test.byte -only-test suite:1:Lexer
+
+
+For a full list of options, run:
+
+.. code-block:: console
+
+   $ ./test.byte -help
+
 
 Documentation Tests
 -------------------
 
-Continuous Integration (CI)
----------------------------
+Our `documentation <http://prolog.readthedocs.io/en/latest/>`_ is built using `Sphinx <http://www.sphinx-doc.org/en/stable/>`_ and hosted on `Read the Docs <https://readthedocs.org/>`_. In order to ensure that our documentation doesn't contain any broken links, we run regular tests on our documentation. ``sphinx-build`` has a ``-W`` flag that turns warnings into errors. The documentation can be built using this flag like so:
+
+.. code-block:: console
+
+   $ make docs
+
+
+``sphinx-build`` will crash and report an error message if it encounters any problems.
+
+.. note::
+
+   Sphinx and sphinx_rtd_theme are required in order to build the documentation. If you want to build a PDF, LaTeX is also required.
+
+
+Continuous Integration
+----------------------
+
+Each commit to the GitHub repository can introduce new features, but it can also introduce bugs. In order to prevent these bugs from creeping in, we use `Travis CI <https://travis-ci.org/>`_ for continuous integration testing. Travis runs our unit and documentation tests after each commit, and reports any problems to the developers when the build crashes. It runs these tests using the five latest versions of OCaml (4.02 - 4.06) to make sure that our prolog interpreter works with any modern version of OCaml.
+
+To view the results of the latest build, see https://travis-ci.org/adamjstewart/prolog. For our Travis configuration, see ``.travis.yml``.
+
 
 Coverage
 --------
+
+Unit tests are useless if they don't actually test the function containing a bug. We used `bisect_ppx <https://github.com/aantron/bisect_ppx>`_ to get an accurate measurement of what percentage of our code base was actually covered by unit tests. By integrating our unit tests with bisect_ppx, we can generate coverage reports that can be viewed through a web browser to see exactly which lines were hit. This was extremely beneficial when testing the lexer and parser, as it told us exactly which match cases were being missed. Before we started using bisect_ppx, we were getting around 65% coverage. With the help of bisect_ppx, we were able to attain over 90% coverage. The remaining 10% is really obscure corner cases that can arise in the lexer and parser, causing errors to occur.
+
+After each successful build, Travis uploads our coverage reports to `Coveralls <https://coveralls.io/>`_. To view our coverage reports, including which lines are not yet covered by unit tests, see https://coveralls.io/github/adamjstewart/prolog?branch=master.
+
+The reports sent to Coveralls are helpful, but it isn't possible to view coverage for generated files like ``lexer.ml`` and ``parser.ml``. In order to view coverage for these files, you can generate coverage reports locally like so:
+
+.. code-block:: console
+
+   $ make coverage
+
+
+This will automatically open up the coverage reports in your default web browser.
