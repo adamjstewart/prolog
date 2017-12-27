@@ -1,5 +1,5 @@
-Welcome to Prolog's documentation!
-==================================
+Prolog Documentation
+====================
 
 .. toctree::
    :maxdepth: 2

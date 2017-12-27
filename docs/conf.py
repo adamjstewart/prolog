@@ -31,11 +31,18 @@
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.graphviz']
+extensions = [
+    'sphinx.ext.graphviz',
+    'sphinx.ext.todo'
+]
 
 # The output format for Graphviz when building HTML files.
 # This must be either 'png' or 'svg'; the default is 'png'.
 graphviz_output_format = 'svg'
+
+# If this is True, todo and todolist produce output, else they produce nothing.
+# The default is False.
+todo_include_todos = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
