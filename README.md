@@ -34,6 +34,7 @@ Additionally, in order to build the documentation, the following dependencies ar
 
 * [Sphinx](https://pypi.python.org/pypi/Sphinx) for building the documentation
 * [Sphinx_rtd_theme](https://pypi.python.org/pypi/sphinx_rtd_theme) for the HTML theme
+* [Graphviz](http://www.graphviz.org/) for rendering the parser graph
 * [LaTeX](https://www.latex-project.org/) for building a PDF version
 
 The recommended way to install these dependencies is with [pip](https://pip.pypa.io/en/stable/):

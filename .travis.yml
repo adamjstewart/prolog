@@ -18,6 +18,7 @@ addons:
       - aspcud
       - opam
       - python3-pip
+      - graphviz
 
 # Install the specified version of OCaml
 before_install:

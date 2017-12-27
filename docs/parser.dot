@@ -1,0 +1,21 @@
+digraph G {
+    nt0 [label="clause'"];
+    nt1 [label="term_list"];
+    nt2 [label="term"];
+    nt3 [label="structure"];
+    nt4 [label="predicate_list"];
+    nt5 [label="predicate"];
+    nt6 [label="constant"];
+    nt7 [label="clause"];
+    nt0 -> nt7;
+    nt1 -> nt1;
+    nt1 -> nt2;
+    nt2 -> nt3;
+    nt2 -> nt6;
+    nt3 -> nt1;
+    nt4 -> nt4;
+    nt4 -> nt5;
+    nt5 -> nt3;
+    nt7 -> nt4;
+    nt7 -> nt5;
+}
