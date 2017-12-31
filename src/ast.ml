@@ -10,13 +10,13 @@ type exp =
     | VarExp of string              (* variables                *)
     | ConstExp of const             (* constants                *)
     | TermExp of string * exp list  (* functor(arg1, arg2, ...) *)
-    | ConjunctionExp of exp * exp   (* term, term               *)
-    | DisjunctionExp of exp * exp   (* term; term               *)
+    (*  | ConjunctionExp of exp * exp   (* term, term               *)*)
+(* | DisjunctionExp of exp * exp   (* term; term               *)*)
 
 (* Declarations *)
 type dec =
-    | Clause of exp * exp   (* Head :- Body. *)
-    | Query of exp          (* ?- Body.      *)
+    | Clause of exp * (exp list)  (* Head :- Body. *)
+    | Query of (exp list)         (* ?- Body.      *)
 
 (* Results *)
 type res =

@@ -1,31 +1,26 @@
 open Ast
 
+let (fresh, reset) =
+   let nxt = ref 0 in
+   let f () = (nxt := !nxt + 1; string_of_int (!nxt)) in
+   let r () = nxt := 0 in
+    (f, r) 
 
-let rec check_if_dec_in_db (Clause (h, b), db) =
-    match db with
-    | [] -> false
-    | ((Clause (h1, b1)) :: xs) ->
-        if h = h1
-        then true
-        else check_if_dec_in_db (Clause (h,b) ,xs)
 
-let rec update_dec_in_db (Clause (h, newb), db) =
-    match db with
-    | [] -> []
-    | ((Clause (h1, b1)) :: xs) ->
-        if h = h1
-        then (Clause (h, newb)) :: xs
-        else (Clause (h1, b1)) :: (update_dec_in_db (Clause (h, newb), xs))
+
 
 let add_clause_to_db (dec,db) =
     match dec with
-    Clause (h,b) ->
-        let r = check_if_dec_in_db (dec, db) in
-            if r
-            then update_dec_in_db (dec, db)
-            else (Clause (h, b)) :: db
+    Clause (h,b) -> dec :: db
 
+(*let eval_query (q, db, env) =
+    match q with 
+    | TermExp(s,el) -> loop_term_in_db (s,e1) db env
+    | ConjunctionExp(e1,e2) -> (match eval_query (lift_sub_goal e1 env) with
+                               | None -> None
+                               | Some(s1) -> eval_query (lift_sub_goal (lift_sub_goal e2 env) s1)
+ *)
 let eval_dec (dec, db) =
     match dec with
     | Clause(h,b) -> (add_clause_to_db (dec, db), None)
-    | Query(b) -> raise (Failure "Not Implementing right now")
+    | Query(b) -> raise (Failure "not implemented")
