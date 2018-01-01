@@ -86,7 +86,8 @@ let rec eval_query (q, db, env, orig_query_vars, orig_vars_num) =
                  ( match d with VarExp(v) ->
                      (match List.assoc_opt (VarExp(v)) e2 with
                       | Some(TermExp(st,el)) ->  print_string (v ^ " = " ^ (string_of_atom ((TermExp(st,el))) ^ "\n")); r
-                      | Some(_) ->  raise(Failure "not needed")                                        
+                      | Some(VarExp(v2)) ->  print_string (v ^ " is free\n");r
+                      | Some(_) -> raise(Failure "not needed")
                       | None -> print_string (v ^ " is free\n");r)
                               | _ ->  raise(Failure "not needed")
                  )
@@ -127,6 +128,7 @@ let eval_dec (dec, db) =
                  eval_query (b, db, [], orig_vars, orig_vars_num);
                     (if (!found_solution = false)
                     then print_string "false\n"
-                    else (if (orig_vars_num = 0) then (print_string "true\n"); found_solution := false));
+                                      (*else (if (orig_vars_num = 0) then (print_string "true\n"); found_solution := false));*)
+                     else ( (print_string "true\n"); found_solution := false));
                     db)
    
