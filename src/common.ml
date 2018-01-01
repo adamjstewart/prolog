@@ -67,5 +67,8 @@ let string_of_db db =
 let print_db db =
     print_endline (string_of_db db)
 
-let string_of_res r =
-    raise (Failure "Not implemented yet")
+let string_of_atom a =
+    match a with
+    | (TermExp(s,_)) -> s
+    | _ -> raise(Failure "not needed")
+               
