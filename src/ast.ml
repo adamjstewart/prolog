@@ -9,7 +9,7 @@ type const =
 type exp =
     | VarExp of string              (* variables                *)
     | ConstExp of const             (* constants                *)
-    | TermExp of string * exp list  (* functor(arg1, arg2, ...) *
+    | TermExp of string * exp list  (* functor(arg1, arg2, ...) *)
 
 (* Declarations *)
 type dec =

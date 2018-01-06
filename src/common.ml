@@ -27,7 +27,6 @@ let string_of_token t =
     | LPAREN    -> "LPAREN"
     | RPAREN    -> "RPAREN"
     | COMMA     -> "COMMA"
-    | SEMICOLON -> "SEMICOLON"
     | EOF       -> "EOF"
 
 let string_of_token_list tl =
