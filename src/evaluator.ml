@@ -9,10 +9,11 @@ let (fresh, reset) =
   (f, r) 
 
 let found_solution = ref false
-                   
+let more_solutions = ref true
+let all_solutions = ref false                   
 let rec find_vars q  =
   match q with [] -> []
-             | (x::xs) -> (match x with VarExp(v) -> [x] @ (find_vars xs)
+             | (x::xs) -> (match x with VarExp(v) -> x :: (find_vars xs)
                                      | ConstExp(c) -> (find_vars xs)
                                      | TermExp(s,el) -> (find_vars el) @ (find_vars xs))
                        
@@ -78,9 +79,17 @@ let rec unify constraints =
                                                  | _ -> None)
                                   | _ -> None
 
+ let rec getResp u = 
+    print_string "More Answers? (Y)es/(N)o/(A)ll\t";
+    (match (read_line ()) with
+    | "Y" -> ()
+    | "N" -> more_solutions := false; ()
+    | "A" -> all_solutions := true; more_solutions := true; ()
+    | _ -> print_string "Didn't understand input. Try Again.\n"; getResp () )                                      
                                       
 let rec eval_query (q, db, env, orig_query_vars, orig_vars_num) =
-  match q with 
+  if ((!more_solutions) = true) then
+  (match q with 
   | [] -> (
     found_solution := true;
     (if (orig_vars_num > 0) then print_string "====================\n");
@@ -100,8 +109,9 @@ let rec eval_query (q, db, env, orig_query_vars, orig_vars_num) =
     
     (if (orig_vars_num > 0) then print_string "====================\n");
     
+    if (((!all_solutions) = false) && (orig_vars_num > 0)) then getResp ();
   )
-  | (g1::gl) -> (
+   | (g1::gl) -> (
     List.fold_right (fun rule r ->
       
       match (rename_vars_in_clause rule) with
@@ -127,6 +137,7 @@ let rec eval_query (q, db, env, orig_query_vars, orig_vars_num) =
       |  _ -> raise(Failure "not needed")
            
       ) db () 
+   )
   )
              
 
@@ -141,6 +152,6 @@ let eval_dec (dec, db) =
                 (if (!found_solution = false)
                  then print_string "false\n"
                                    (*else (if (orig_vars_num = 0) then (print_string "true\n"); found_solution := false));*)
-                 else ( (print_string "true\n"); found_solution := false));
+                 else ( (print_string "true\n"); found_solution := false; more_solutions := true; all_solutions := false));
                 db)
              

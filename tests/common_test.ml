@@ -53,6 +53,8 @@ let common_test_suite =
                 TermExp ("coord", [VarExp "X"; VarExp "Y"; VarExp "Z"])
             ), "TermExp (\"coord\", [VarExp \"X\"; VarExp \"Y\"; VarExp \"Z\"])";
             
+            string_of_atom (TermExp("blah",[])),    "blah";
+            
             (* Declarations *)
             string_of_dec (
                 Clause (TermExp ("cat", []), [ConstExp (BoolConst true)])
@@ -71,6 +73,6 @@ let common_test_suite =
                 Clause (TermExp ("foo", []), [ConstExp (BoolConst true)]);
                 Query ([TermExp ("bar", [])])
             ]; "print_db"), "print_db";
-
+            
         ]
     )
