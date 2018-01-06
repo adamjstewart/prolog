@@ -35,8 +35,7 @@ let _ =
            | Parsing.Parse_error ->
              (print_string "\ndoes not parse\n";
               loop db)
-           | _ -> (print_string "\ndoes not work\n";
-              loop db));
+           );
        
   with Lexer.EndInput -> exit 0
  in (loop [Clause (TermExp ("true", []), [ConstExp (BoolConst true)])] )

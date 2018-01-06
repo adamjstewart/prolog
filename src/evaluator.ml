@@ -26,8 +26,9 @@ let uniq l =
 
 let rec sub_lift_goal sub g =
   match g with
-  | VarExp(v) ->(match  List.assoc_opt g sub with None -> VarExp(v)
-                                               | Some(i) -> i)
+  | VarExp(v) ->(try let i = List.assoc g sub in i
+                with Not_found -> VarExp(v))
+                                               
   | TermExp(s,el) -> TermExp(s, List.map (fun g1 -> sub_lift_goal sub g1) el)
   | _  -> g
        
@@ -86,11 +87,12 @@ let rec eval_query (q, db, env, orig_query_vars, orig_vars_num) =
     
     List.fold_right (fun d r ->
         ( match d with VarExp(v) ->
-                       (match List.assoc_opt (VarExp(v)) env with
-                        | Some(TermExp(st,el)) ->  print_string (v ^ " = " ^ (string_of_atom ((TermExp(st,el))) ^ "\n")); r
-                        | Some(VarExp(v2)) ->  print_string (v ^ " is free\n");r
-                        | Some(_) -> raise(Failure "not needed")
-                        | None -> print_string (v ^ " is free\n");r)
+                       (try let f =  List.assoc (VarExp(v)) env in
+                        match f with
+                        | TermExp(st,el) ->  print_string (v ^ " = " ^ (string_of_atom ((TermExp(st,el))) ^ "\n")); r
+                        | VarExp(v2) ->  print_string (v ^ " is free\n");r
+                        | _ -> raise(Failure "not needed")
+                        with Not_found ->  print_string (v ^ " is free\n");r)
                      | _ ->  raise(Failure "not needed")
         )
       )
@@ -100,9 +102,9 @@ let rec eval_query (q, db, env, orig_query_vars, orig_vars_num) =
     
   )
   | (g1::gl) -> (
-    for i = 0 to ((List.length db)-1) do
-      let rulei = List.nth db i in
-      match (rename_vars_in_clause rulei) with
+    List.fold_right (fun rule r ->
+      
+      match (rename_vars_in_clause rule) with
       | Clause(h,b) ->
          (match unify [(g1, h)] with
           | Some(s) ->
@@ -121,10 +123,10 @@ let rec eval_query (q, db, env, orig_query_vars, orig_vars_num) =
              )
           | _ -> ()
               
-         )
+         ) 
       |  _ -> raise(Failure "not needed")
            
-    done
+      ) db () 
   )
              
 
