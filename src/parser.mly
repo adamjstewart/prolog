@@ -44,7 +44,6 @@
 %token LPAREN     /* (  */
 %token RPAREN     /* )  */
 %token COMMA      /* ,  */
-%token SEMICOLON  /* ;  */
 
 /* Meta-characters */
 %token EOF
@@ -67,8 +66,7 @@ clause:
 
 predicate_list:
     | p = predicate                                     { [p] }
-    | p = predicate; COMMA; pl = predicate_list        { p :: pl }
- (*   | pl = predicate_list; SEMICOLON; p = predicate     { DisjunctionExp (pl, p) }*)
+    | p = predicate; COMMA; pl = predicate_list         { p :: pl }
 
 predicate:
     | a = ATOM                                          { atom_sugar a }

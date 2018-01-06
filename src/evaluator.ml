@@ -1,5 +1,7 @@
 open Ast
 open Common
+
+
 let (fresh, reset) =
   let nxt = ref 0 in
   let f () = (nxt := !nxt + 1; string_of_int (!nxt)) in
@@ -8,11 +10,12 @@ let (fresh, reset) =
 
 let found_solution = ref false
                    
-let rec find_vars q  = match q with [] -> []
-                                  | (x::xs) -> (match x with VarExp(v) -> [x] @ (find_vars xs)
-                                                          | ConstExp(c) -> (find_vars xs)
-                                                          | TermExp(s,el) -> (find_vars el) @ (find_vars xs))
-                                            
+let rec find_vars q  =
+  match q with [] -> []
+             | (x::xs) -> (match x with VarExp(v) -> [x] @ (find_vars xs)
+                                     | ConstExp(c) -> (find_vars xs)
+                                     | TermExp(s,el) -> (find_vars el) @ (find_vars xs))
+                       
 (* from https://rosettacode.org/wiki/Remove_duplicate_elements#OCaml *)
 let uniq l =
   let rec tail_uniq a l =
@@ -123,9 +126,9 @@ let rec eval_query (q, db, env, orig_query_vars, orig_vars_num) =
            
     done
   )
-    
+             
 
-    
+             
 let eval_dec (dec, db) =
   match dec with
   | Clause(h,b) -> add_clause_to_db (dec, db)

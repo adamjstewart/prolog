@@ -33,7 +33,6 @@ let common_test_suite =
             string_of_token LPAREN,         "LPAREN";
             string_of_token RPAREN,         "RPAREN";
             string_of_token COMMA,          "COMMA";
-            string_of_token SEMICOLON,      "SEMICOLON";
             string_of_token EOF,            "EOF";
 
             string_of_token_list [
@@ -53,30 +52,24 @@ let common_test_suite =
             string_of_exp (
                 TermExp ("coord", [VarExp "X"; VarExp "Y"; VarExp "Z"])
             ), "TermExp (\"coord\", [VarExp \"X\"; VarExp \"Y\"; VarExp \"Z\"])";
-            string_of_exp (
-                ConjunctionExp (TermExp ("cat", []), TermExp ("dog", []))
-            ), "ConjunctionExp (TermExp (\"cat\", []), TermExp (\"dog\", []))";
-            string_of_exp (
-                DisjunctionExp (TermExp ("cat", []), TermExp ("dog", []))
-            ), "DisjunctionExp (TermExp (\"cat\", []), TermExp (\"dog\", []))";
-
+            
             (* Declarations *)
             string_of_dec (
-                Clause (TermExp ("cat", []), ConstExp (BoolConst true))
-            ), "Clause (TermExp (\"cat\", []), ConstExp (BoolConst true))";
+                Clause (TermExp ("cat", []), [ConstExp (BoolConst true)])
+            ), "Clause (TermExp (\"cat\", []), [ConstExp (BoolConst true)])";
             string_of_dec (
-                Query (TermExp ("cat", [TermExp ("tom", [])]))
-            ), "Query (TermExp (\"cat\", [TermExp (\"tom\", [])]))";
+                Query ([TermExp ("cat", [TermExp ("tom", [])])])
+            ), "Query ([TermExp (\"cat\", [TermExp (\"tom\", [])])])";
 
             (* Database *)
             string_of_db [
-                Clause (TermExp ("foo", []), ConstExp (BoolConst true));
-                Query (TermExp ("bar", []))
-            ], "[Clause (TermExp (\"foo\", []), ConstExp (BoolConst true)); Query (TermExp (\"bar\", []))]";
+                Clause (TermExp ("foo", []), [ConstExp (BoolConst true)]);
+                Query ([TermExp ("bar", [])])
+            ], "[Clause (TermExp (\"foo\", []), [ConstExp (BoolConst true)]); Query ([TermExp (\"bar\", [])])]";
 
             (print_db [
-                Clause (TermExp ("foo", []), ConstExp (BoolConst true));
-                Query (TermExp ("bar", []))
+                Clause (TermExp ("foo", []), [ConstExp (BoolConst true)]);
+                Query ([TermExp ("bar", [])])
             ]; "print_db"), "print_db";
 
         ]

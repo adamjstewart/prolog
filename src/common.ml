@@ -47,11 +47,6 @@ let rec string_of_exp e =
     | TermExp (f, args) ->
         let func = String.escaped f in
             "TermExp (\"" ^ func ^ "\", [" ^ (String.concat "; " (List.map string_of_exp args)) ^ "])"
-(*    | ConjunctionExp (e1, e2) ->
-        "ConjunctionExp (" ^ (string_of_exp e1) ^ ", " ^ (string_of_exp e2) ^ ")"
-    | DisjunctionExp (e1, e2) ->
-        "DisjunctionExp (" ^ (string_of_exp e1) ^ ", " ^ (string_of_exp e2) ^ ")"
- *)
 
 
 let string_of_goals g = "[" ^ (String.concat "; " (List.map string_of_exp g)) ^ "]"
