@@ -92,7 +92,6 @@ let lexer_test_suite =
             "(",        [LPAREN];
             ")",        [RPAREN];
             ",",        [COMMA];
-            ";",        [SEMICOLON];
             ":- ?- ()", [RULE; QUERY; LPAREN; RPAREN];
 
             (* Comments *)

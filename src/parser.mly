@@ -9,7 +9,7 @@
     let fact_sugar p =
         Clause (
             p,
-            ConstExp (BoolConst true)
+            [ConstExp (BoolConst true)]
         )
 
     (* An atom can be regarded as a compound term with arity zero *)
@@ -44,7 +44,6 @@
 %token LPAREN     /* (  */
 %token RPAREN     /* )  */
 %token COMMA      /* ,  */
-%token SEMICOLON  /* ;  */
 
 /* Meta-characters */
 %token EOF
@@ -54,8 +53,8 @@
 
 /* Types */
 %type <Ast.dec> clause
-%type <Ast.exp> predicate_list predicate term structure
-%type <Ast.exp list> term_list
+%type <Ast.exp> predicate term structure
+%type <Ast.exp list> term_list predicate_list 
 %type <Ast.const> constant
 
 %%
@@ -66,9 +65,8 @@ clause:
     | QUERY; pl = predicate_list; PERIOD                { Query pl }
 
 predicate_list:
-    | p = predicate                                     { p }
-    | pl = predicate_list; COMMA;     p = predicate     { ConjunctionExp (pl, p) }
-    | pl = predicate_list; SEMICOLON; p = predicate     { DisjunctionExp (pl, p) }
+    | p = predicate                                     { [p] }
+    | p = predicate; COMMA; pl = predicate_list         { p :: pl }
 
 predicate:
     | a = ATOM                                          { atom_sugar a }

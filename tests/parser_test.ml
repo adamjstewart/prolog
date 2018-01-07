@@ -20,157 +20,67 @@ let parser_test_suite =
         [
             (* Facts *)
             "cat.", (
-                Clause (TermExp ("cat", []), ConstExp (BoolConst true))
+                Clause (TermExp ("cat", []), [ConstExp (BoolConst true)])
             );
             "cat().", (
-                Clause (TermExp ("cat", []), ConstExp (BoolConst true))
+                Clause (TermExp ("cat", []), [ConstExp (BoolConst true)])
             );
             "cat(tom).", (
-                Clause (TermExp ("cat", [TermExp ("tom", [])]), ConstExp (BoolConst true))
+                Clause (TermExp ("cat", [TermExp ("tom", [])]), [ConstExp (BoolConst true)])
             );
             "cat(tom()).", (
-                Clause (TermExp ("cat", [TermExp ("tom", [])]), ConstExp (BoolConst true))
+                Clause (TermExp ("cat", [TermExp ("tom", [])]), [ConstExp (BoolConst true)])
             );
             "cat(X).", (
-                Clause (TermExp ("cat", [VarExp "X"]), ConstExp (BoolConst true))
+                Clause (TermExp ("cat", [VarExp "X"]), [ConstExp (BoolConst true)])
             );
             "coord(X, Y, Z).", (
-                Clause (
-                    TermExp ("coord", [VarExp "X"; VarExp "Y"; VarExp "Z"]),
-                    ConstExp (BoolConst true)
-                )
+                Clause (TermExp ("coord", [VarExp "X"; VarExp "Y"; VarExp "Z"]), [ConstExp (BoolConst true)])
             );
             "coord(1, 2, 3).", (
-                Clause (
-                    TermExp ("coord", [
-                        ConstExp (IntConst 1);
-                        ConstExp (IntConst 2);
-                        ConstExp (IntConst 3)
-                    ]),
-                    ConstExp (BoolConst true)
-                )
+                Clause (TermExp ("coord", [ConstExp (IntConst 1); ConstExp (IntConst 2); ConstExp (IntConst 3)]), [ConstExp (BoolConst true)])
             );
             "coord(1.0, 2.0, 3.0).", (
-                Clause (
-                    TermExp ("coord", [
-                        ConstExp (FloatConst 1.);
-                        ConstExp (FloatConst 2.);
-                        ConstExp (FloatConst 3.)
-                    ]),
-                    ConstExp (BoolConst true)
-                )
+                Clause (TermExp ("coord", [ConstExp (FloatConst 1.); ConstExp (FloatConst 2.); ConstExp (FloatConst 3.)]), [ConstExp (BoolConst true)])
+
             );
             "cousins(\"jack\", \"jill\").", (
-                Clause (
-                    TermExp ("cousins", [
-                        ConstExp (StringConst "jack");
-                        ConstExp (StringConst "jill")
-                    ]),
-                    ConstExp (BoolConst true)
-                )
+               Clause (TermExp ("cousins", [ConstExp (StringConst "jack"); ConstExp (StringConst "jill")]), [ConstExp (BoolConst true)])
+
             );
 
             (* Rules *)
             "animal(X) :- cat(X).", (
-                Clause (TermExp ("animal", [VarExp "X"]), TermExp ("cat", [VarExp "X"]))
+                Clause (TermExp ("animal", [VarExp "X"]), [TermExp ("cat", [VarExp "X"])])
             );
             "sibling(X, Y) :- parent_child(Z, X), parent_child(Z, Y).", (
-                Clause (
-                    TermExp ("sibling", [VarExp "X"; VarExp "Y"]),
-                    ConjunctionExp (
-                        TermExp ("parent_child", [VarExp "Z"; VarExp "X"]),
-                        TermExp ("parent_child", [VarExp "Z"; VarExp "Y"])
-                    )
-                )
+                Clause (TermExp ("sibling", [VarExp "X"; VarExp "Y"]), [TermExp ("parent_child", [VarExp "Z"; VarExp "X"]); TermExp ("parent_child", [VarExp "Z"; VarExp "Y"])])
             );
-            "sibling(X, Y) :- parent_child(Z, X); parent_child(Z, Y).", (
-                Clause (
-                    TermExp ("sibling", [VarExp "X"; VarExp "Y"]),
-                    DisjunctionExp (
-                        TermExp ("parent_child", [VarExp "Z"; VarExp "X"]),
-                        TermExp ("parent_child", [VarExp "Z"; VarExp "Y"])
-                    )
-                )
-            );
+           
             "nonsense_words :- foo, bar, baz.", (
-                Clause (
-                    TermExp ("nonsense_words", []),
-                    ConjunctionExp (
-                        ConjunctionExp (
-                            TermExp ("foo", []),
-                            TermExp ("bar", [])
-                        ),
-                        TermExp ("baz", [])
-                    )
-                )
+                Clause (TermExp ("nonsense_words", []), [TermExp ("foo", []); TermExp ("bar", []); TermExp ("baz", [])])
             );
-            "nonsense_words :- foo; bar; baz.", (
-                Clause (
-                    TermExp ("nonsense_words", []),
-                    DisjunctionExp (
-                        DisjunctionExp (
-                            TermExp ("foo", []),
-                            TermExp ("bar", [])
-                        ),
-                        TermExp ("baz", [])
-                    )
-                )
-            );
-            "nonsense_words :- foo, bar; baz.", (
-                Clause (
-                    TermExp ("nonsense_words", []),
-                    DisjunctionExp (
-                        ConjunctionExp (
-                            TermExp ("foo", []),
-                            TermExp ("bar", [])
-                        ),
-                        TermExp ("baz", [])
-                    )
-                )
-            );
-            "nonsense_words :- foo; bar, baz.", (
-                Clause (
-                    TermExp ("nonsense_words", []),
-                    ConjunctionExp (
-                        DisjunctionExp (
-                            TermExp ("foo", []),
-                            TermExp ("bar", [])
-                        ),
-                        TermExp ("baz", [])
-                    )
-                )
-            );
+           
 
             (* Queries *)
             "?- cat(tom).", (
-                Query (TermExp ("cat", [TermExp ("tom", [])]))
+                Query ([TermExp ("cat", [TermExp ("tom", [])])])
             );
             "?- cat(X).", (
-                Query (TermExp ("cat", [VarExp "X"]))
+                Query ([TermExp ("cat", [VarExp "X"])])
             );
             "?- sibling(sally, erica).", (
-                Query (TermExp ("sibling", [TermExp ("sally", []); TermExp ("erica", [])]))
+                Query ([TermExp ("sibling", [TermExp ("sally", []); TermExp ("erica", [])])])
             );
             "?- sibling(sally, erica), sibling(john, joe).", (
-                Query (
-                    ConjunctionExp (
-                        TermExp ("sibling", [TermExp ("sally", []); TermExp ("erica", [])]),
-                        TermExp ("sibling", [TermExp ("john",  []); TermExp ("joe",   [])])
-                    )
-                )
-            );
-            "?- sibling(sally, erica); sibling(john, joe).", (
-                Query (
-                    DisjunctionExp (
-                        TermExp ("sibling", [TermExp ("sally", []); TermExp ("erica", [])]),
-                        TermExp ("sibling", [TermExp ("john",  []); TermExp ("joe",   [])])
-                    )
-                )
-            );
+                Query ([TermExp ("sibling", [TermExp ("sally", []); TermExp ("erica", [])]); TermExp ("sibling", [TermExp ("john", []); TermExp ("joe", [])])])
 
+            );
+           
             (* Combinations *)
             "cat(tom). animal(X) :- cat(X). ?- animal(X).", (
-                Clause (TermExp ("cat", [TermExp ("tom", [])]), ConstExp (BoolConst true))
+                Clause (TermExp ("cat", [TermExp ("tom", [])]), [ConstExp (BoolConst true)])
+
             );
         ]
     )
@@ -204,19 +114,16 @@ let parser_failure_test_suite =
             "cat 9";
             "cat,";
             "cat:-";
-            "cat;";
             "cat((";
             "cat(X.";
             "cat(, X).";
             "(cat).";
             "cat, dog.";
-            "cat; dog.";
             "coord(X, Y, Z)";
             "coord(X, Y, Z.";
             "coord X, Y, Z).";
             "coord X, Y, Z.";
             "coord(X Y Z).";
-            "coord(X; Y; Z).";
             "coord(X, Y, Z, ).";
             "coord(, X, Y, Z).";
             "VAR().";
@@ -227,7 +134,6 @@ let parser_failure_test_suite =
             "cat(X) :-.";
             "cat() :- cat() cat().";
             "parent_child(Z, X), parent_child(Z, Y) :- sibling(X, Y).";
-            "parent_child(Z, X); parent_child(Z, Y) :- sibling(X, Y).";
 
             (* Queries *)
             "?-";
@@ -235,6 +141,5 @@ let parser_failure_test_suite =
             "cat(tom) ?-";
             "cat(tom) ?- mouse(jerry).";
             "cat(tom), dog(spike) ?- mouse(jerry).";
-            "cat(tom); dog(spike) ?- mouse(jerry).";
         ]
     )

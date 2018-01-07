@@ -27,7 +27,6 @@ let string_of_token t =
     | LPAREN    -> "LPAREN"
     | RPAREN    -> "RPAREN"
     | COMMA     -> "COMMA"
-    | SEMICOLON -> "SEMICOLON"
     | EOF       -> "EOF"
 
 let string_of_token_list tl =
@@ -47,15 +46,14 @@ let rec string_of_exp e =
     | TermExp (f, args) ->
         let func = String.escaped f in
             "TermExp (\"" ^ func ^ "\", [" ^ (String.concat "; " (List.map string_of_exp args)) ^ "])"
-    | ConjunctionExp (e1, e2) ->
-        "ConjunctionExp (" ^ (string_of_exp e1) ^ ", " ^ (string_of_exp e2) ^ ")"
-    | DisjunctionExp (e1, e2) ->
-        "DisjunctionExp (" ^ (string_of_exp e1) ^ ", " ^ (string_of_exp e2) ^ ")"
 
+
+let string_of_goals g = "[" ^ (String.concat "; " (List.map string_of_exp g)) ^ "]"
+                      
 let string_of_dec d =
     match d with
-    | Clause (e1, e2) -> "Clause (" ^ (string_of_exp e1) ^ ", " ^ (string_of_exp e2) ^ ")"
-    | Query e -> "Query (" ^ (string_of_exp e) ^ ")"
+    | Clause (e1, g) -> "Clause (" ^ (string_of_exp e1) ^ ", " ^ (string_of_goals g) ^ ")"
+    | Query g -> "Query (" ^ (string_of_goals g) ^ ")"
 
 let string_of_db db =
     "[" ^ (String.concat "; " (List.map string_of_dec db)) ^ "]"
@@ -63,5 +61,8 @@ let string_of_db db =
 let print_db db =
     print_endline (string_of_db db)
 
-let string_of_res r =
-    raise (Failure "Not implemented yet")
+let string_of_atom a =
+    match a with
+    | (TermExp(s,_)) -> s
+    | _ -> raise(Failure "not needed")
+               
