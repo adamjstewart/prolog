@@ -47,7 +47,7 @@ let rec rename_vars_in_clause c =
 let add_clause_to_db (dec,db) =
   match dec with
   | Clause (h,b) -> (match h with TermExp("true",_) -> print_string "can't reassign true predicate\n"; db
-                               | _ -> db @ [dec])
+                               | _ -> dec :: db)
   | _ -> raise(Failure "not needed")
 let rec pairandcat sargs targs c = match sargs with [] -> c
                                                   | (s::ss) -> match targs with (t::ts) -> pairandcat ss ts ((s,t)::c)
