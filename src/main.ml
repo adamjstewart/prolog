@@ -32,7 +32,7 @@ let _ =
 			   print_endline s;
                            print_newline();
                            loop db)
-           | Parsing.Parse_error ->
+           | Parser.Error ->
              (print_string "\ndoes not parse\n";
               loop db)
            );
