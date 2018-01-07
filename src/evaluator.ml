@@ -31,7 +31,7 @@ let rec sub_lift_goal sub g =
   match g with
   | VarExp(v) ->(try let i = List.assoc g sub in i
                 with Not_found -> VarExp(v))
-                                               
+             
   | TermExp(s,el) -> TermExp(s, List.map (fun g1 -> sub_lift_goal sub g1) el)
   | _  -> g
        
@@ -44,21 +44,21 @@ let rec rename_vars_in_clause c =
      let vars = uniq (head_vars @ body_vars) in
      let sub = List.map (fun x -> (x, VarExp(fresh()))) vars in
      Clause(sub_lift_goal sub h, sub_lift_goals sub b)
-(* | _ -> raise(Failure "not needed")*)
+  | _ -> raise(Failure "not needed")
 let add_clause_to_db (dec,db) =
   match dec with
   | Clause (h,b) -> (match h with TermExp("true",_) -> print_string "can't reassign true predicate\n"; db
                                | _ -> dec :: db)
-(*  | _ -> raise(Failure "not needed")*)
+  | _ -> raise(Failure "not needed")
 let rec pairandcat sargs targs c = match sargs with [] -> c
                                                   | (s::ss) -> match targs with (t::ts) -> pairandcat ss ts ((s,t)::c)
-(* |  _ -> raise(Failure "not needed")*)
+                                                                            |  _ -> raise(Failure "not needed")
 let rec replace c sub = match c with [] -> []
                                    | ((s,t)::xs) -> (sub_lift_goal sub s, sub_lift_goal sub t)::(replace xs sub)
 let rec occurs s t = match s with VarExp(n) -> (match t with VarExp(m) -> n = m
                                                           | TermExp(st,el) -> List.fold_left (fun acc v -> acc || (occurs s v)) false el
                                                           | _ -> false)
-(*|  _ -> raise(Failure "not needed")*)
+                               |  _ -> raise(Failure "not needed")
 let rec unify constraints =
   match constraints with
   | [] -> Some([])
@@ -81,82 +81,82 @@ let rec unify constraints =
                                                  | _ -> None)
                                   | _ -> None
 
- let rec getResp u = 
-    print_string "More Answers? (Y)es/(N)o/(A)ll\t";
-    (match (read_line ()) with
-    | "Y" -> ()
-    | "N" -> more_solutions := false; ()
-    | "A" -> all_solutions := true; more_solutions := true; ()
-    | _ -> print_string "Didn't understand input. Try Again.\n"; getResp () )                                      
-                                      
+let rec getResp u = 
+  print_string "More Answers? (Y)es/(N)o/(A)ll\t";
+  (match (read_line ()) with
+   | "Y" -> ()
+   | "N" -> more_solutions := false; ()
+   | "A" -> all_solutions := true; more_solutions := true; ()
+   | _ -> print_string "Didn't understand input. Try Again.\n"; getResp () )                                      
+  
 let rec eval_query (q, db, env, orig_query_vars, orig_vars_num) =
   if ((!more_solutions) = true) then
-  (match q with 
-  | [] -> (
-    found_solution := true;
-    (if (orig_vars_num > 0) then print_string "====================\n");
-    
-    List.fold_right (fun d r ->
-        ( match d with VarExp(v) ->
-                       (try let f =  List.assoc (VarExp(v)) env in
-                        match f with
-                        | TermExp(st,el) ->  print_string (v ^ " = " ^ (string_of_atom ((TermExp(st,el))) ^ "\n")); r
-                        | VarExp(v2) ->  print_string (v ^ " is free\n");r
-                        | ConstExp(cv) -> print_string (v ^ " = " ^ (string_of_exp f) ^ "\n"); r
-                                                                                         (* | _ -> raise(Failure "not needed")*)
-                        with Not_found ->  print_string (v ^ " is free\n");r)
-        (*  | _ ->  raise(Failure "not needed")*)
-        )
-      )
-                    (orig_query_vars) ();
-    
-    (if (orig_vars_num > 0) then print_string "====================\n");
-    
-    if (((!all_solutions) = false) && (orig_vars_num > 0) && ((!testing) = false)) then getResp ();
-  )
-   | (g1::gl) -> (
-    List.fold_right (fun rule r ->
-      
-      match (rename_vars_in_clause rule) with
-      | Clause(h,b) ->
-         (match unify [(g1, h)] with
-          | Some(s) ->
-             (match unify (s@env) with
-              | Some(env2) ->
-                 (if (List.length b = 1 )
-                  then
-                    (match b with ((ConstExp (BoolConst true))::ys) ->
-                                  eval_query (sub_lift_goals s gl, db, env2, orig_query_vars,  orig_vars_num)
-                                | _ ->  eval_query ((sub_lift_goals s b) @ (sub_lift_goals s gl), db, env2, orig_query_vars, orig_vars_num))
-                  else 
-                    eval_query ((sub_lift_goals s b) @ (sub_lift_goals s gl), db, env2, orig_query_vars,  orig_vars_num)
-                 
-                 )
-              | _ -> ()
-             )
-          | _ -> ()
-              
-         ) 
-      (*  |  _ -> raise(Failure "not needed")*)
+    (match q with 
+     | [] -> (
+       found_solution := true;
+       (if (orig_vars_num > 0) then print_string "====================\n");
+       
+       List.fold_right (fun d r ->
+           ( match d with VarExp(v) ->
+                          (try let f =  List.assoc (VarExp(v)) env in
+                               match f with
+                               | TermExp(st,el) ->  print_string (v ^ " = " ^ (string_of_atom ((TermExp(st,el))) ^ "\n")); r
+                               | VarExp(v2) ->  print_string (v ^ " is free\n");r
+                               | ConstExp(cv) -> print_string (v ^ " = " ^ (string_of_exp f) ^ "\n"); r
+                                                
+                           with Not_found ->  print_string (v ^ " is free\n");r)
+                        | _ ->  raise(Failure "not needed")
+           )
+         )
+                       (orig_query_vars) ();
+       
+       (if (orig_vars_num > 0) then print_string "====================\n");
+       
+       if (((!all_solutions) = false) && (orig_vars_num > 0) && ((!testing) = false)) then getResp ();
+     )
+     | (g1::gl) -> (
+       List.fold_right (fun rule r ->
            
-      ) db () 
-   )
-  )
-             
+           match (rename_vars_in_clause rule) with
+           | Clause(h,b) ->
+              (match unify [(g1, h)] with
+               | Some(s) ->
+                  (match unify (s@env) with
+                   | Some(env2) ->
+                      (if (List.length b = 1 )
+                       then
+                         (match b with ((ConstExp (BoolConst true))::ys) ->
+                                       eval_query (sub_lift_goals s gl, db, env2, orig_query_vars,  orig_vars_num)
+                                     | _ ->  eval_query ((sub_lift_goals s b) @ (sub_lift_goals s gl), db, env2, orig_query_vars, orig_vars_num))
+                       else 
+                         eval_query ((sub_lift_goals s b) @ (sub_lift_goals s gl), db, env2, orig_query_vars,  orig_vars_num)
+                      
+                      )
+                   | _ -> ()
+                  )
+               | _ -> ()
+                   
+              ) 
+           |  _ -> raise(Failure "not needed")
+                
+         ) db () 
+     )
+    )
+  
 
 let set_testing newval = testing := newval
                        
 let eval_dec (dec, db) =
   (match dec with
-  | Clause(h,b) -> add_clause_to_db (dec, db)
-  | Query(b) -> (let orig_vars = uniq (find_vars b) in
-                let orig_vars_num = List.length orig_vars in
-                
-                eval_query (b, db, [], orig_vars, orig_vars_num);
-                (if (!found_solution = false)
-                 then print_string "false\n"
-                                   (*else (if (orig_vars_num = 0) then (print_string "true\n"); found_solution := false));*)
-                 else ( (print_string "true\n"); found_solution := false; more_solutions := true; all_solutions := false; reset ()));
-                db)
-             
+   | Clause(h,b) -> add_clause_to_db (dec, db)
+   | Query(b) -> (let orig_vars = uniq (find_vars b) in
+                 let orig_vars_num = List.length orig_vars in
+                 
+                 eval_query (b, db, [], orig_vars, orig_vars_num);
+                 (if (!found_solution = false)
+                  then print_string "false\n"
+                  
+                  else ( (print_string "true\n"); found_solution := false; more_solutions := true; all_solutions := false; reset ()));
+                 db)
+              
   )
