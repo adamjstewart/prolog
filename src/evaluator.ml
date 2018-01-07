@@ -10,7 +10,8 @@ let (fresh, reset) =
 
 let found_solution = ref false
 let more_solutions = ref true
-let all_solutions = ref false                   
+let all_solutions = ref false
+
 let rec find_vars q  =
   match q with [] -> []
              | (x::xs) -> (match x with VarExp(v) -> x :: (find_vars xs)

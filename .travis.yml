@@ -33,6 +33,7 @@ install:
   - opam install --yes bisect_ppx
   - opam install --yes bisect_ppx-ocamlbuild
   - opam install --yes ocveralls
+  - opam install --yes core_extended
   - pip3 install --user --upgrade pip
   - pip3 install --user --upgrade sphinx
   - pip3 install --user --upgrade sphinx_rtd_theme

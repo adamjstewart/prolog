@@ -28,6 +28,7 @@ $ opam install menhir
 $ opam install bisect_ppx
 $ opam install bisect_ppx-ocamlbuild
 $ opam install ocveralls
+$ opam install core_extended
 ```
 
 Additionally, in order to build the documentation, the following dependencies are required:
