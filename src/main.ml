@@ -13,7 +13,6 @@ let _ =
       then print_endline "\nWelcome to the Prolog Interpreter \n"
       else ());
   let rec loop db =
-    print_db db;
   try
     let lexbuf = Lexing.from_channel stdin
     in (if is_interactive 

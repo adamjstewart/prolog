@@ -102,7 +102,7 @@ let rec eval_query (q, db, env, orig_query_vars, orig_vars_num) =
                         match f with
                         | TermExp(st,el) ->  print_string (v ^ " = " ^ (string_of_atom ((TermExp(st,el))) ^ "\n")); r
                         | VarExp(v2) ->  print_string (v ^ " is free\n");r
-                        | ConstExp(cv) -> print_string (v ^ " = " ^ (string_of_exp f)); r
+                        | ConstExp(cv) -> print_string (v ^ " = " ^ (string_of_exp f) ^ "\n"); r
                                                                                          (* | _ -> raise(Failure "not needed")*)
                         with Not_found ->  print_string (v ^ " is free\n");r)
         (*  | _ ->  raise(Failure "not needed")*)
