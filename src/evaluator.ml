@@ -153,6 +153,6 @@ let eval_dec (dec, db) =
                 (if (!found_solution = false)
                  then print_string "false\n"
                                    (*else (if (orig_vars_num = 0) then (print_string "true\n"); found_solution := false));*)
-                 else ( (print_string "true\n"); found_solution := false; more_solutions := true; all_solutions := false));
+                 else ( (print_string "true\n"); found_solution := false; more_solutions := true; all_solutions := false; reset ()));
                 db)
              
