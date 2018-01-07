@@ -17,7 +17,7 @@ This project depends on the following OCaml libraries:
 * [Bisect_ppx](https://opam.ocaml.org/packages/bisect_ppx/) for coverage analysis
 * [Bisect_ppx-ocamlbuild](https://opam.ocaml.org/packages/bisect_ppx-ocamlbuild/) for integration between Bisect_ppx and OCamlbuild
 * [OCveralls](https://opam.ocaml.org/packages/ocveralls/) for uploading coverage reports to [Coveralls](https://coveralls.io/)
-* [Core_extended](https://opam.ocaml.org/packages/core_extended/) for the Readline module
+
 
 The recommended way to install these dependencies is with [OPAM](https://opam.ocaml.org/):
 
@@ -29,7 +29,6 @@ $ opam install menhir
 $ opam install bisect_ppx
 $ opam install bisect_ppx-ocamlbuild
 $ opam install ocveralls
-$ opam install core_extended
 ```
 
 Additionally, in order to build the documentation, the following dependencies are required:

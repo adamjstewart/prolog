@@ -12,5 +12,5 @@ true: use_menhir
 <tests/*>: package(oUnit)
 
 # Integrate bisect_ppx for coverage analysis
-<src/*>: coverage, package(str)
-<tests/test.{byte,native}>: coverage, package(str)
+<src/*>: coverage
+<tests/test.{byte,native}>: coverage
