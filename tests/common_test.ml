@@ -54,6 +54,7 @@ let common_test_suite =
             ), "TermExp (\"coord\", [VarExp \"X\"; VarExp \"Y\"; VarExp \"Z\"])";
             
             string_of_atom (TermExp("blah",[])),    "blah";
+            (try string_of_atom (VarExp "v") with Failure s ->  s), "not needed";
             
             (* Declarations *)
             string_of_dec (
