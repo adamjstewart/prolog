@@ -2,6 +2,7 @@ open Ast
 open Common
 
 
+let testing = ref false
 let (fresh, reset) =
   let nxt = ref 0 in
   let f () = (nxt := !nxt + 1; string_of_int (!nxt)) in
@@ -43,21 +44,21 @@ let rec rename_vars_in_clause c =
      let vars = uniq (head_vars @ body_vars) in
      let sub = List.map (fun x -> (x, VarExp(fresh()))) vars in
      Clause(sub_lift_goal sub h, sub_lift_goals sub b)
-  | _ -> raise(Failure "not needed")
+(* | _ -> raise(Failure "not needed")*)
 let add_clause_to_db (dec,db) =
   match dec with
   | Clause (h,b) -> (match h with TermExp("true",_) -> print_string "can't reassign true predicate\n"; db
                                | _ -> dec :: db)
-  | _ -> raise(Failure "not needed")
+(*  | _ -> raise(Failure "not needed")*)
 let rec pairandcat sargs targs c = match sargs with [] -> c
                                                   | (s::ss) -> match targs with (t::ts) -> pairandcat ss ts ((s,t)::c)
-                                                                            |  _ -> raise(Failure "not needed")
+(* |  _ -> raise(Failure "not needed")*)
 let rec replace c sub = match c with [] -> []
                                    | ((s,t)::xs) -> (sub_lift_goal sub s, sub_lift_goal sub t)::(replace xs sub)
 let rec occurs s t = match s with VarExp(n) -> (match t with VarExp(m) -> n = m
                                                           | TermExp(st,el) -> List.fold_left (fun acc v -> acc || (occurs s v)) false el
                                                           | _ -> false)
-                               |  _ -> raise(Failure "not needed")
+(*|  _ -> raise(Failure "not needed")*)
 let rec unify constraints =
   match constraints with
   | [] -> Some([])
@@ -101,16 +102,17 @@ let rec eval_query (q, db, env, orig_query_vars, orig_vars_num) =
                         match f with
                         | TermExp(st,el) ->  print_string (v ^ " = " ^ (string_of_atom ((TermExp(st,el))) ^ "\n")); r
                         | VarExp(v2) ->  print_string (v ^ " is free\n");r
-                        | _ -> raise(Failure "not needed")
+                        | ConstExp(cv) -> print_string (v ^ " = " ^ (string_of_exp f)); r
+                                                                                         (* | _ -> raise(Failure "not needed")*)
                         with Not_found ->  print_string (v ^ " is free\n");r)
-                     | _ ->  raise(Failure "not needed")
+        (*  | _ ->  raise(Failure "not needed")*)
         )
       )
                     (orig_query_vars) ();
     
     (if (orig_vars_num > 0) then print_string "====================\n");
     
-    if (((!all_solutions) = false) && (orig_vars_num > 0)) then getResp ();
+    if (((!all_solutions) = false) && (orig_vars_num > 0) && ((!testing) = false)) then getResp ();
   )
    | (g1::gl) -> (
     List.fold_right (fun rule r ->
@@ -135,16 +137,17 @@ let rec eval_query (q, db, env, orig_query_vars, orig_vars_num) =
           | _ -> ()
               
          ) 
-      |  _ -> raise(Failure "not needed")
+      (*  |  _ -> raise(Failure "not needed")*)
            
       ) db () 
    )
   )
              
 
-             
+let set_testing newval = testing := newval
+                       
 let eval_dec (dec, db) =
-  match dec with
+  (match dec with
   | Clause(h,b) -> add_clause_to_db (dec, db)
   | Query(b) -> (let orig_vars = uniq (find_vars b) in
                 let orig_vars_num = List.length orig_vars in
@@ -156,3 +159,4 @@ let eval_dec (dec, db) =
                  else ( (print_string "true\n"); found_solution := false; more_solutions := true; all_solutions := false; reset ()));
                 db)
              
+  )
