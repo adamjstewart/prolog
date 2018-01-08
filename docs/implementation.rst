@@ -46,10 +46,10 @@ can be represented with the following abstract syntax tree:
 
    Clause (
        TermExp ("sibling", [VarExp "X"; VarExp "Y"]),
-       ConjunctionExp (
+       [
            TermExp ("parent_child", [VarExp "Z"; VarExp "X"]),
            TermExp ("parent_child", [VarExp "Z"; VarExp "Y"])
-       )
+       ]
    )
 
 
@@ -76,7 +76,9 @@ and is represented as an abstract syntax tree in a way that reflects this:
 
    Clause (
        TermExp ("cat", [TermExp ("tom", [])]),
-       ConstExp (BoolConst true)
+       [
+           ConstExp (BoolConst true)
+       ]
    )
 
 
@@ -101,12 +103,12 @@ can be represented with the following abstract syntax tree:
 
 .. code-block:: ocaml
 
-   Query (
+   Query ([
        TermExp ("sibling", [
            TermExp ("sally", []);
            TermExp ("erica", [])
        ])
-   )
+   ])
 
 
 Terms
@@ -169,8 +171,7 @@ The full BNF grammar we support is listed here:
          : <predicate> :- <predicate_list> . |
          : ?- <predicate_list> .
    predicate_list: <predicate> |
-                 : <predicate_list> , <predicate> |
-                 : <predicate_list> ; <predicate>
+                 : <predicate> , <predicate_list> |
    predicate: atom |
             : <structure>
    structure: atom ( ) |
