@@ -10,8 +10,6 @@ let (fresh, reset) =
   (f, r) 
 
 let found_solution = ref false
-let more_solutions = ref true
-let all_solutions = ref false
 
 let rec find_vars q  =
   match q with [] -> []
@@ -81,70 +79,72 @@ let rec unify constraints =
                                                  | _ -> None)
                                   | _ -> None
 
-let rec getResp u = 
-  print_string "More Answers? (Y)es/(N)o/(A)ll\t";
-  (match (read_line ()) with
-   | "Y" -> ()
-   | "N" -> more_solutions := false; ()
-   | "A" -> all_solutions := true; more_solutions := true; ()
-   | _ -> print_string "Didn't understand input. Try Again.\n"; getResp () )                                      
-  
+                                      
+                                      
 let rec eval_query (q, db, env, orig_query_vars, orig_vars_num) =
-  if ((!more_solutions) = true) then
-    (match q with 
-     | [] -> (
-       found_solution := true;
-       (if (orig_vars_num > 0) then print_string "====================\n");
-       
-       List.fold_right (fun d r ->
-           ( match d with VarExp(v) ->
-                          (try let f =  List.assoc (VarExp(v)) env in
-                               match f with
-                               | TermExp(st,el) ->  print_string (v ^ " = " ^ (string_of_atom ((TermExp(st,el))) ^ "\n")); r
-                               | VarExp(v2) ->  print_string (v ^ " is free\n");r
-                               | ConstExp(cv) -> print_string (v ^ " = " ^ (string_of_exp f) ^ "\n"); r
-                                                
-                           with Not_found ->  print_string (v ^ " is free\n");r)
-                        | _ ->  raise(Failure "not needed")
-           )
-         )
-                       (orig_query_vars) ();
-       
-       (if (orig_vars_num > 0) then print_string "====================\n");
-       
-       if (((!all_solutions) = false) && (orig_vars_num > 0) && ((!testing) = false)) then getResp ();
-     )
-     | (g1::gl) -> (
-       List.fold_right (fun rule r ->
-           
-           match (rename_vars_in_clause rule) with
-           | Clause(h,b) ->
-              (match unify [(g1, h)] with
-               | Some(s) ->
-                  (match unify (s@env) with
-                   | Some(env2) ->
-                      (if (List.length b = 1 )
-                       then
-                         (match b with ((ConstExp (BoolConst true))::ys) ->
-                                       eval_query (sub_lift_goals s gl, db, env2, orig_query_vars,  orig_vars_num)
-                                     | _ ->  eval_query ((sub_lift_goals s b) @ (sub_lift_goals s gl), db, env2, orig_query_vars, orig_vars_num))
-                       else 
-                         eval_query ((sub_lift_goals s b) @ (sub_lift_goals s gl), db, env2, orig_query_vars,  orig_vars_num)
-                      
-                      )
-                   | _ -> ()
-                  )
-               | _ -> ()
-                   
-              ) 
-           |  _ -> raise(Failure "not needed")
-                
-         ) db () 
-     )
-    )
-  
+  (* if ((!more_solutions) = true) then*)
+  (match q with 
+   | [] -> (
+     found_solution := true;
+     
+     
+     [env]
+   )
+   | (g1::gl) -> (
+     List.fold_right (fun rule r ->
+         
+         match (rename_vars_in_clause rule) with
+         | Clause(h,b) ->
+            (match unify [(g1, h)] with
+             | Some(s) ->
+                (match unify (s@env) with
+                 | Some(env2) ->
+                    (if (List.length b = 1 )
+                     then
+                       (match b with ((ConstExp (BoolConst true))::ys) ->
+                                     ( (eval_query (sub_lift_goals s gl, db, env2, orig_query_vars,  orig_vars_num)) @ r)
+                                   | _ -> ( (eval_query ((sub_lift_goals s b) @ (sub_lift_goals s gl), db, env2, orig_query_vars, orig_vars_num))@r))
+                     else 
+                       ((eval_query ((sub_lift_goals s b) @ (sub_lift_goals s gl), db, env2, orig_query_vars,  orig_vars_num)) @r)
+                    
+                    )
+                 | _ -> []@r
+                )
+             | _ -> []@r
+                 
+            ) 
+         |  _ -> raise(Failure "not needed")
+              
+       ) db []
+   )
+  )
 
-let set_testing newval = testing := newval
+let print_res e orig_query_vars orig_vars_num  = List.fold_right (fun env r2 ->
+                                                     print_string "====================\n";
+                                                     
+                                                     List.fold_right (fun d r ->
+                                                         ( match d with VarExp(v) ->
+                                                                        (try let f =  List.assoc (VarExp(v)) env in
+                                                                             match f with
+                                                                             | TermExp(st,el) ->  print_string (v ^ " = " ^ (string_of_atom ((TermExp(st,el))) ^ "\n")); r
+                                                                             | VarExp(v2) ->  print_string (v ^ " is free\n");r
+                                                                             | ConstExp(cv) -> print_string (v ^ " = " ^ (string_of_exp f) ^ "\n"); r
+                                                                                              
+                                                                         with Not_found ->  print_string (v ^ " is free\n");r)
+                                                                      | _ ->  raise(Failure "not needed")
+                                                         )
+                                                       )
+                                                                     (orig_query_vars) ();
+                                                     
+                                                     print_string "====================\n";r2
+                                                     
+                                                     
+                                                     
+                                                   ) e ()
+
+                                               
+
+
                        
 let eval_dec (dec, db) =
   (match dec with
@@ -152,11 +152,11 @@ let eval_dec (dec, db) =
    | Query(b) -> (let orig_vars = uniq (find_vars b) in
                  let orig_vars_num = List.length orig_vars in
                  
-                 eval_query (b, db, [], orig_vars, orig_vars_num);
+                 print_res (eval_query (b, db, [], orig_vars, orig_vars_num)) orig_vars orig_vars_num;
                  (if (!found_solution = false)
                   then print_string "false\n"
                   
-                  else ( (print_string "true\n"); found_solution := false; more_solutions := true; all_solutions := false; reset ()));
+                  else ( (print_string "true\n"); found_solution := false; reset ()));
                  db)
               
   )
