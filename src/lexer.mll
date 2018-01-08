@@ -53,46 +53,46 @@ let variable = (upper_case | underline) alphanumerical *
 
 rule token = parse
     (* Meta-characters *)
-    | [' ' '\t' '\n']       { token lexbuf }
-    | eof                   { EOF }
+    | [' ' '\t' '\n']   { token lexbuf }
+    | eof               { EOF }
 
     (* Comments *)
-    | line_comment          { token lexbuf }
-    | open_comment          { comments 1 lexbuf }
-    | close_comment         { raise (Failure "unmatched closed comment") }
+    | line_comment      { token lexbuf }
+    | open_comment      { comments 1 lexbuf }
+    | close_comment     { raise (Failure "unmatched closed comment") }
 
     (* Atoms *)
-    | atom as a             { ATOM a }
-    | atom_quote            { atoms "" lexbuf }
+    | atom as a         { ATOM a }
+    | atom_quote        { atoms "" lexbuf }
 
     (* Numbers *)
-    | integers as n         { INT   (int_of_string n)   }
-    | floats   as f         { FLOAT (float_of_string f) }
-    | inf                   { FLOAT infinity            }
-    | neg_inf               { FLOAT neg_infinity        }
+    | integers as n     { INT   (int_of_string n)   }
+    | floats   as f     { FLOAT (float_of_string f) }
+    | inf               { FLOAT infinity            }
+    | neg_inf           { FLOAT neg_infinity        }
 
     (* Strings *)
-    | string_quote          { strings "" lexbuf }
+    | string_quote      { strings "" lexbuf }
 
     (* Variables *)
-    | variable as v         { VAR v }
+    | variable as v     { VAR v }
 
     (* Symbols *)
-    | ":-"                  { RULE      }
-    | "?-"                  { QUERY     }
-    | '.'                   { PERIOD    }
-    | '('                   { LPAREN    }
-    | ')'                   { RPAREN    }
-    | ','                   { COMMA     }
+    | ":-"              { RULE      }
+    | "?-"              { QUERY     }
+    | '.'               { PERIOD    }
+    | '('               { LPAREN    }
+    | ')'               { RPAREN    }
+    | ','               { COMMA     }
 
 and comments count = parse
-    | open_comment          { comments (1 + count) lexbuf }
-    | close_comment         { match count with
-                              | 1 -> token lexbuf
-                              | n -> comments (n - 1) lexbuf
-                            }
-    | eof                   { raise (Failure "unmatched open comment") }
-    | _                     { comments count lexbuf }
+    | open_comment      { comments (1 + count) lexbuf }
+    | close_comment     { match count with
+                          | 1 -> token lexbuf
+                          | n -> comments (n - 1) lexbuf
+                        }
+    | eof               { raise (Failure "unmatched open comment") }
+    | _                 { comments count lexbuf }
 
 and strings acc = parse
     (* Consecutive strings are concatenated into a single string *)
@@ -102,30 +102,30 @@ and strings acc = parse
     | escape                                    { escaped strings acc lexbuf }
 
 and atoms acc = parse
-    | atom_quote                        { ATOM acc }
-    | non_escape # ['''] + as a         { atoms (acc ^ a) lexbuf }
-    | escape                            { escaped atoms acc lexbuf }
+    | atom_quote                    { ATOM acc }
+    | non_escape # ['''] + as a     { atoms (acc ^ a) lexbuf }
+    | escape                        { escaped atoms acc lexbuf }
 
 and escaped callback acc = parse
-    | 'a'                               { callback (acc ^ (String.make 1 (char_of_int   7))) lexbuf }
-    | 'b'                               { callback (acc ^ (String.make 1 (char_of_int   8))) lexbuf }
-    | 'f'                               { callback (acc ^ (String.make 1 (char_of_int  12))) lexbuf }
-    | 'n'                               { callback (acc ^ (String.make 1 (char_of_int  10))) lexbuf }
-    | 'r'                               { callback (acc ^ (String.make 1 (char_of_int  13))) lexbuf }
-    | 't'                               { callback (acc ^ (String.make 1 (char_of_int   9))) lexbuf }
-    | 'v'                               { callback (acc ^ (String.make 1 (char_of_int  11))) lexbuf }
-    | 'e'                               { callback (acc ^ (String.make 1 (char_of_int  27))) lexbuf }
-    | 'd'                               { callback (acc ^ (String.make 1 (char_of_int 127))) lexbuf }
-    | escape                            { callback (acc ^ "\\") lexbuf }
-    | atom_quote                        { callback (acc ^  "'") lexbuf }
-    | string_quote                      { callback (acc ^ "\"") lexbuf }
-    | end_of_line                       { callback acc lexbuf }
-    | 'c' (blank_space | end_of_line) * { callback acc lexbuf }
-    | octals as o                       { callback (acc ^ (String.make 1 (char_of_int (
-                                            int_of_string ("0o" ^ o))))) lexbuf }
-    | hexes as h                        { callback (acc ^ (String.make 1 (char_of_int (
-                                            int_of_string ("0" ^ (String.sub h 0 (
-                                                (String.length h) - 1))))))) lexbuf }
+    | 'a'           { callback (acc ^ (String.make 1 (char_of_int   7))) lexbuf }
+    | 'b'           { callback (acc ^ (String.make 1 (char_of_int   8))) lexbuf }
+    | 'f'           { callback (acc ^ (String.make 1 (char_of_int  12))) lexbuf }
+    | 'n'           { callback (acc ^ (String.make 1 (char_of_int  10))) lexbuf }
+    | 'r'           { callback (acc ^ (String.make 1 (char_of_int  13))) lexbuf }
+    | 't'           { callback (acc ^ (String.make 1 (char_of_int   9))) lexbuf }
+    | 'v'           { callback (acc ^ (String.make 1 (char_of_int  11))) lexbuf }
+    | 'e'           { callback (acc ^ (String.make 1 (char_of_int  27))) lexbuf }
+    | 'd'           { callback (acc ^ (String.make 1 (char_of_int 127))) lexbuf }
+    | escape        { callback (acc ^ "\\") lexbuf }
+    | atom_quote    { callback (acc ^  "'") lexbuf }
+    | string_quote  { callback (acc ^ "\"") lexbuf }
+    | end_of_line   { callback acc lexbuf }
+    | 'c' (blank_space | end_of_line) *     { callback acc lexbuf }
+    | octals as o   { callback (acc ^ (String.make 1 (char_of_int (
+                        int_of_string ("0o" ^ o))))) lexbuf }
+    | hexes as h    { callback (acc ^ (String.make 1 (char_of_int (
+                        int_of_string ("0" ^ (String.sub h 0 (
+                            (String.length h) - 1))))))) lexbuf }
 
 {
     (* Takes a string s and returns a list of tokens generated by lexing s *)
