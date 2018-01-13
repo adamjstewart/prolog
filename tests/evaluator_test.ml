@@ -642,8 +642,6 @@ let evaluator_test_suite =
               (3)
            ), "false\n";
 
-
-
             (string_of_res
               (eval_query
                  (
