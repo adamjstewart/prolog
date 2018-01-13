@@ -630,6 +630,18 @@ let evaluator_test_suite =
               (3)
            ), "====================\nX = tom\nY is free\nZ is free\n====================\ntrue\n";
 
+           (string_of_res
+              (eval_query
+                 (
+                   [TermExp("animal", [VarExp "X"; VarExp "Y"]); VarExp "Z"],
+                   [Clause (TermExp ("animal", [VarExp "X"; VarExp "Y"]), [TermExp ("cat", [VarExp "X"])]); Clause (TermExp ("cat", [TermExp ("tom", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("true", []), [ConstExp (BoolConst true)])],
+                   [(VarExp "X", TermExp("eh",[VarExp "X"]))]
+                 )
+              )
+              ([VarExp "Z"; VarExp "Y"; VarExp "X"; ConstExp(IntConst 10); TermExp("blah", [])])
+              (3)
+           ), "false\n";
+
            (* Adding declarations to db *)
            (string_of_db
               (add_dec_to_db
