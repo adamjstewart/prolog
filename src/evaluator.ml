@@ -241,7 +241,7 @@ let rec eval_query (q, db, env) =
                                 match b with
                                 (* if the rule proved the subgoal (ie. rule was a
                                    fact) then recurse on remaining subgoals *)
-                                | ((ConstExp (BoolConst true)) :: ys) ->
+                                | ((TermExp ("true", _)) :: ys) ->
                                     ((eval_query (
                                         sub_lift_goals s gl,
                                         db,

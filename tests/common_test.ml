@@ -58,7 +58,7 @@ let common_test_suite =
             (* Declarations *)
             string_of_dec (
                 Clause (TermExp ("cat", []), [TermExp ("true", [])])
-            ), "Clause (TermExp (\"cat\", []), [TermExp (\"true\", []])";
+            ), "Clause (TermExp (\"cat\", []), [TermExp (\"true\", [])])";
             string_of_dec (
                 Query ([TermExp ("cat", [TermExp ("tom", [])])])
             ), "Query ([TermExp (\"cat\", [TermExp (\"tom\", [])])])";
@@ -67,7 +67,7 @@ let common_test_suite =
             string_of_db [
                 Clause (TermExp ("foo", []), [TermExp ("true", [])]);
                 Query ([TermExp ("bar", [])])
-            ], "[Clause (TermExp (\"foo\", []), [TermExp (\"true\", []]); Query ([TermExp (\"bar\", [])])]";
+            ], "[Clause (TermExp (\"foo\", []), [TermExp (\"true\", [])]); Query ([TermExp (\"bar\", [])])]";
 
             (print_db [
                 Clause (TermExp ("foo", []), [TermExp ("true", [])]);
