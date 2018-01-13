@@ -642,6 +642,42 @@ let evaluator_test_suite =
               (3)
            ), "false\n";
 
+            (string_of_res
+              (eval_query
+                 (
+                   [TermExp("b", [TermExp("a", [TermExp("true",[])])])],
+                   [Clause (TermExp("b",[VarExp "X"]), [TermExp("a", [VarExp "X"])]); Clause (TermExp("a",[TermExp("true",[])]), [ConstExp (BoolConst true)]); Clause (TermExp ("true", []), [ConstExp (BoolConst true)])],
+                   []
+                 )
+              )
+              ([])
+              (0)
+            ), "false\n";
+
+            (string_of_res
+              (eval_query
+                 (
+                   [TermExp("b", [TermExp("a", [TermExp("true",[])])])],
+                   [Clause (TermExp("b",[VarExp "X"]), [TermExp("a", [VarExp "X"])]); Clause (TermExp("a",[TermExp("true",[])]), [TermExp ("true", [])]); Clause (TermExp ("true", []), [ConstExp (BoolConst true)])],
+                   []
+                 )
+              )
+              ([])
+              (0)
+            ), "false\n";
+
+            (string_of_res
+              (eval_query
+                 (
+                   [TermExp("b", [TermExp("a", [TermExp("true",[])])])],
+                   [Clause (TermExp("b",[VarExp "X"]), [TermExp("a", [VarExp "X"])]); Clause (TermExp("a",[TermExp("true",[])]), [TermExp ("true", [])])],
+                   []
+                 )
+              )
+              ([])
+              (0)
+            ), "false\n";
+
            (* Adding declarations to db *)
            (string_of_db
               (add_dec_to_db
