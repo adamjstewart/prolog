@@ -247,12 +247,6 @@ let rec eval_query (q, db, env) =
                                         db,
                                         env2
                                      )) @ r)
-                                | ((TermExp ("true", _)) :: ys) ->
-                                    ((eval_query (
-                                        sub_lift_goals s gl,
-                                        db,
-                                        env2
-                                     )) @ r)
                                 (* if rule wasn't a fact then we have more
                                    subgoals from the body of the rule 
                                    to prove *)
