@@ -448,7 +448,7 @@ let evaluator_test_suite =
               )
               ([])
               (0)
-           ), "false\n";
+           ), "true\n";
 
            (string_of_res
               (eval_query

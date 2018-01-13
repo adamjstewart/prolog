@@ -49,4 +49,4 @@ let _ =
             );
         
     )
-    in (loop [Clause (TermExp ("true", []), [ConstExp (BoolConst true)])])
+    in (loop [])
