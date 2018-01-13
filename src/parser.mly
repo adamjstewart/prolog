@@ -9,7 +9,7 @@
     let fact_sugar p =
         Clause (
             p,
-            [ConstExp (BoolConst true)]
+            [TermExp ("true", [])]
         )
 
     (* An atom can be regarded as a compound term with arity zero *)
@@ -54,7 +54,7 @@
 /* Types */
 %type <Ast.dec> clause
 %type <Ast.exp> predicate term structure
-%type <Ast.exp list> term_list predicate_list 
+%type <Ast.exp list> term_list predicate_list
 %type <Ast.const> constant
 
 %%

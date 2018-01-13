@@ -3,7 +3,6 @@ type const =
     | IntConst of int        (* integers *)
     | FloatConst of float    (* floats   *)
     | StringConst of string  (* strings  *)
-    | BoolConst of bool      (* booleans *)
 
 (* Expressions *)
 type exp =

@@ -43,8 +43,6 @@ let common_test_suite =
             string_of_const (IntConst (-3)),    "IntConst -3";
             string_of_const (FloatConst 27.3),  "FloatConst 27.3";
             string_of_const (StringConst "\n"), "StringConst \"\\n\"";
-            string_of_const (BoolConst true),   "BoolConst true";
-            string_of_const (BoolConst false),  "BoolConst false";
 
             (* Expressions *)
             string_of_exp (VarExp "X"),             "VarExp \"X\"";
@@ -55,24 +53,24 @@ let common_test_suite =
             string_of_exp_list (
                 [VarExp "X"; ConstExp (IntConst 10); TermExp ("blah", [VarExp "Y"; ConstExp (StringConst "hi"); TermExp ("end", [])])]
             ), "[VarExp \"X\"; ConstExp (IntConst 10); TermExp (\"blah\", [VarExp \"Y\"; ConstExp (StringConst \"hi\"); TermExp (\"end\", [])])]";
-            
-            
+
+
             (* Declarations *)
             string_of_dec (
-                Clause (TermExp ("cat", []), [ConstExp (BoolConst true)])
-            ), "Clause (TermExp (\"cat\", []), [ConstExp (BoolConst true)])";
+                Clause (TermExp ("cat", []), [TermExp ("true", [])])
+            ), "Clause (TermExp (\"cat\", []), [TermExp (\"true\", []])";
             string_of_dec (
                 Query ([TermExp ("cat", [TermExp ("tom", [])])])
             ), "Query ([TermExp (\"cat\", [TermExp (\"tom\", [])])])";
 
             (* Database *)
             string_of_db [
-                Clause (TermExp ("foo", []), [ConstExp (BoolConst true)]);
+                Clause (TermExp ("foo", []), [TermExp ("true", [])]);
                 Query ([TermExp ("bar", [])])
-            ], "[Clause (TermExp (\"foo\", []), [ConstExp (BoolConst true)]); Query ([TermExp (\"bar\", [])])]";
+            ], "[Clause (TermExp (\"foo\", []), [TermExp (\"true\", []]); Query ([TermExp (\"bar\", [])])]";
 
             (print_db [
-                Clause (TermExp ("foo", []), [ConstExp (BoolConst true)]);
+                Clause (TermExp ("foo", []), [TermExp ("true", [])]);
                 Query ([TermExp ("bar", [])])
                ]; "print_db"), "print_db";
 
@@ -80,8 +78,6 @@ let common_test_suite =
             readable_string_of_const (IntConst (-3)),    "-3";
             readable_string_of_const (FloatConst 27.3),  "27.3";
             readable_string_of_const (StringConst "\n"), "\"\\n\"";
-            readable_string_of_const (BoolConst true),   "true";
-            readable_string_of_const (BoolConst false),  "false";
 
             (* Readable Expression Strings *)
             readable_string_of_exp (VarExp "X"),             "X";
@@ -97,7 +93,7 @@ let common_test_suite =
             string_of_subs (
                 []
             ), "[]";
-            
+
             string_of_subs (
                 [(VarExp "X", TermExp ("hah", []))]
             ), "[(VarExp \"X\", TermExp (\"hah\", []))]";

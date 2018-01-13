@@ -20,17 +20,17 @@ let parser_test_suite =
         [
             (* Facts *)
             "cat.", (
-                Clause (TermExp ("cat", []), [ConstExp (BoolConst true)])
+                Clause (TermExp ("cat", []), [TermExp ("true", [])])
             );
             "cat().", (
-                Clause (TermExp ("cat", []), [ConstExp (BoolConst true)])
+                Clause (TermExp ("cat", []), [TermExp ("true", [])])
             );
             "cat(tom).", (
                 Clause (
                     TermExp (
                         "cat", [TermExp ("tom", [])]
                     ), [
-                        ConstExp (BoolConst true)
+                        TermExp ("true", [])
                     ]
                 )
             );
@@ -39,7 +39,7 @@ let parser_test_suite =
                     TermExp (
                         "cat", [TermExp ("tom", [])]
                     ), [
-                        ConstExp (BoolConst true)
+                        TermExp ("true", [])
                     ]
                 )
             );
@@ -48,7 +48,7 @@ let parser_test_suite =
                     TermExp (
                         "cat", [VarExp "X"]
                     ), [
-                        ConstExp (BoolConst true)
+                        TermExp ("true", [])
                     ]
                 )
             );
@@ -61,7 +61,7 @@ let parser_test_suite =
                             VarExp "Z"
                         ]
                     ), [
-                        ConstExp (BoolConst true)
+                        TermExp ("true", [])
                     ]
                 )
             );
@@ -74,7 +74,7 @@ let parser_test_suite =
                             ConstExp (IntConst 3)
                         ]
                     ), [
-                        ConstExp (BoolConst true)
+                        TermExp ("true", [])
                     ]
                 )
             );
@@ -87,7 +87,7 @@ let parser_test_suite =
                             ConstExp (FloatConst 3.)
                         ]
                     ), [
-                        ConstExp (BoolConst true)
+                        TermExp ("true", [])
                     ]
                 )
             );
@@ -99,12 +99,15 @@ let parser_test_suite =
                             ConstExp (StringConst "jill")
                         ]
                     ), [
-                        ConstExp (BoolConst true)
+                        TermExp ("true", [])
                     ]
                 )
             );
 
             (* Rules *)
+            "cat :- true.", (
+                Clause (TermExp ("cat", []), [TermExp ("true", [])])
+            );
             "animal(X) :- cat(X).", (
                 Clause (
                     TermExp (
@@ -188,7 +191,7 @@ let parser_test_suite =
                             TermExp ("tom", [])
                         ]
                     ), [
-                        ConstExp (BoolConst true)
+                        TermExp ("true", [])
                     ]
                 )
             );
