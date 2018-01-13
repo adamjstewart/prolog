@@ -37,7 +37,6 @@ let string_of_const c =
     | IntConst    i -> "IntConst "      ^ string_of_int i
     | FloatConst  f -> "FloatConst "    ^ string_of_float f
     | StringConst s -> "StringConst \"" ^ String.escaped s ^ "\""
-    | BoolConst   b -> "BoolConst "     ^ string_of_bool b
 
 let rec string_of_exp e =
     match e with
@@ -52,7 +51,7 @@ let rec string_of_exp e =
 
 let string_of_exp_list g =
     "[" ^ (String.concat "; " (List.map string_of_exp g)) ^ "]"
-                      
+
 let string_of_dec d =
     match d with
     | Clause (e1, g) -> "Clause (" ^
@@ -86,7 +85,6 @@ let readable_string_of_const c =
     | IntConst i -> string_of_int i
     | FloatConst f -> string_of_float f
     | StringConst s -> "\"" ^ String.escaped s ^ "\""
-    | BoolConst b -> string_of_bool b
 
 (* Convert exp to a readable string *)
 let rec readable_string_of_exp e =

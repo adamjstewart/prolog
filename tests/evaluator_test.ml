@@ -79,30 +79,30 @@ let evaluator_test_suite =
           (string_of_exp_list
              (sub_lift_goals
                 ([(VarExp "X", VarExp "1")])
-                ([VarExp("X"); ConstExp(IntConst 10); TermExp("blah", [VarExp "X"; VarExp "Y"; ConstExp(BoolConst true)])])
+                ([VarExp("X"); ConstExp(IntConst 10); TermExp("blah", [VarExp "X"; VarExp "Y"; ConstExp (IntConst 1)])])
              )
-          ), "[VarExp \"1\"; ConstExp (IntConst 10); TermExp (\"blah\", [VarExp \"1\"; VarExp \"Y\"; ConstExp (BoolConst true)])]";
+          ), "[VarExp \"1\"; ConstExp (IntConst 10); TermExp (\"blah\", [VarExp \"1\"; VarExp \"Y\"; ConstExp (IntConst 1)])]";
 
           (string_of_exp_list
              (sub_lift_goals
                 ([])
-                ([VarExp("X"); ConstExp(IntConst 10); TermExp("blah", [VarExp "X"; VarExp "Y"; ConstExp(BoolConst true)])])
+                ([VarExp("X"); ConstExp(IntConst 10); TermExp("blah", [VarExp "X"; VarExp "Y"; ConstExp (IntConst 1)])])
              )
-          ), "[VarExp \"X\"; ConstExp (IntConst 10); TermExp (\"blah\", [VarExp \"X\"; VarExp \"Y\"; ConstExp (BoolConst true)])]";
+          ), "[VarExp \"X\"; ConstExp (IntConst 10); TermExp (\"blah\", [VarExp \"X\"; VarExp \"Y\"; ConstExp (IntConst 1)])]";
 
           (string_of_exp_list
              (sub_lift_goals
                 ([(VarExp "X", VarExp "1"); (VarExp "Z", VarExp "blu")])
-                ([VarExp("X"); ConstExp(IntConst 10); TermExp("blah", [VarExp "X"; VarExp "Y"; ConstExp(BoolConst true)])])
+                ([VarExp("X"); ConstExp(IntConst 10); TermExp("blah", [VarExp "X"; VarExp "Y"; ConstExp (IntConst 1)])])
              )
-          ), "[VarExp \"1\"; ConstExp (IntConst 10); TermExp (\"blah\", [VarExp \"1\"; VarExp \"Y\"; ConstExp (BoolConst true)])]";
+          ), "[VarExp \"1\"; ConstExp (IntConst 10); TermExp (\"blah\", [VarExp \"1\"; VarExp \"Y\"; ConstExp (IntConst 1)])]";
 
           (* Renaming variables in a declaration*)
           (string_of_dec
              (rename_vars_in_dec
-                (Clause(TermExp("age",[TermExp("zaid",[]);ConstExp(IntConst 10) ]), [(ConstExp (BoolConst true))]))
+                (Clause(TermExp("age",[TermExp("zaid",[]);ConstExp(IntConst 10) ]), [(ConstExp (IntConst 1))]))
              )
-          ), "Clause (TermExp (\"age\", [TermExp (\"zaid\", []); ConstExp (IntConst 10)]), [ConstExp (BoolConst true)])";
+          ), "Clause (TermExp (\"age\", [TermExp (\"zaid\", []); ConstExp (IntConst 10)]), [ConstExp (IntConst 1)])";
 
           (turn_to_unit (reset());
            string_of_dec
@@ -406,7 +406,7 @@ let evaluator_test_suite =
               (eval_query
                  (
                    [TermExp ("male", [TermExp ("elizabeth", [])])],
-                   [Clause (TermExp("female", [TermExp("elizabeth", [ConstExp (BoolConst true)])]), [])],
+                   [Clause (TermExp("female", [TermExp("elizabeth", [TermExp ("true", [])])]), [])],
                    []
                  )
               )
@@ -418,7 +418,7 @@ let evaluator_test_suite =
               (eval_query
                  (
                    [TermExp ("male", [TermExp ("elizabeth", [])])],
-                   [Clause (TermExp("elizabeth", [TermExp("male", [])]), [ConstExp (BoolConst true)])],
+                   [Clause (TermExp("elizabeth", [TermExp("male", [])]), [TermExp ("true", [])])],
                    []
                  )
               )
@@ -430,7 +430,7 @@ let evaluator_test_suite =
               (eval_query
                  (
                    [TermExp ("female", [TermExp ("elizabeth", [])])],
-                   [Clause (TermExp("female", [TermExp("elizabeth", [])]), [ConstExp (BoolConst true)])],
+                   [Clause (TermExp("female", [TermExp("elizabeth", [])]), [TermExp ("true", [])])],
                    []
                  )
               )
@@ -454,7 +454,7 @@ let evaluator_test_suite =
               (eval_query
                  (
                    [TermExp ("female", [TermExp ("elizabeth", [])])],
-                   [Clause (TermExp("female", [TermExp("elizabeth", [])]), [TermExp("true", [])]); Clause (TermExp ("true", []), [ConstExp (BoolConst true)])],
+                   [Clause (TermExp("female", [TermExp("elizabeth", [])]), [TermExp("true", [])])],
                    []
                  )
               )
@@ -466,7 +466,7 @@ let evaluator_test_suite =
               (eval_query
                  (
                    [TermExp ("male", [TermExp ("elizabeth", [])])],
-                   [Query([TermExp ("male", [TermExp ("elizabeth", [])])]); Clause (TermExp("female", [TermExp("elizabeth", [])]), [TermExp("true", [])]); Clause (TermExp ("true", []), [ConstExp (BoolConst true)])],
+                   [Query([TermExp ("male", [TermExp ("elizabeth", [])])]); Clause (TermExp("female", [TermExp("elizabeth", [])]), [TermExp("true", [])])],
                    []
                  )
               )
@@ -490,7 +490,7 @@ let evaluator_test_suite =
               (eval_query
                  (
                    [TermExp("age", [TermExp("zaid",[]); VarExp "Y"])],
-                   [Clause (TermExp ("age", [ConstExp (StringConst "adam"); ConstExp (IntConst 10)]), [ConstExp (BoolConst true)])],
+                   [Clause (TermExp ("age", [ConstExp (StringConst "adam"); ConstExp (IntConst 10)]), [TermExp ("true", [])])],
                    []
                  )
               )
@@ -502,7 +502,7 @@ let evaluator_test_suite =
               (eval_query
                  (
                    [TermExp("age", [TermExp("zaid",[]); VarExp "Y"])],
-                   [Clause (TermExp ("age", [ConstExp (StringConst "adam"); ConstExp (IntConst 10)]), [ConstExp (BoolConst true)]);Clause (TermExp ("age", [TermExp ("zaid", []); ConstExp (IntConst 5)]), [ConstExp (BoolConst true)])],
+                   [Clause (TermExp ("age", [ConstExp (StringConst "adam"); ConstExp (IntConst 10)]), [TermExp ("true", [])]);Clause (TermExp ("age", [TermExp ("zaid", []); ConstExp (IntConst 5)]), [TermExp ("true", [])])],
                    []
                  )
               )
@@ -514,7 +514,7 @@ let evaluator_test_suite =
               (eval_query
                  (
                    [TermExp("age", [VarExp "E"; VarExp "Z"])],
-                   [Clause (TermExp ("age", [ConstExp (StringConst "adam"); ConstExp (IntConst 10)]), [ConstExp (BoolConst true)]);Clause (TermExp ("age", [TermExp ("zaid", []); ConstExp (IntConst 5)]), [ConstExp (BoolConst true)])],
+                   [Clause (TermExp ("age", [ConstExp (StringConst "adam"); ConstExp (IntConst 10)]), [TermExp ("true", [])]);Clause (TermExp ("age", [TermExp ("zaid", []); ConstExp (IntConst 5)]), [TermExp ("true", [])])],
                    []
                  )
               )
@@ -526,7 +526,7 @@ let evaluator_test_suite =
               (eval_query
                  (
                    [TermExp("age", [VarExp "X"; ConstExp (IntConst 5)])],
-                   [Clause (TermExp ("age", [ConstExp (StringConst "adam"); ConstExp (IntConst 10)]), [ConstExp (BoolConst true)]);Clause (TermExp ("age", [TermExp ("zaid", []); ConstExp (IntConst 5)]), [ConstExp (BoolConst true)])],
+                   [Clause (TermExp ("age", [ConstExp (StringConst "adam"); ConstExp (IntConst 10)]), [TermExp ("true", [])]);Clause (TermExp ("age", [TermExp ("zaid", []); ConstExp (IntConst 5)]), [TermExp ("true", [])])],
                    []
                  )
               )
@@ -538,7 +538,7 @@ let evaluator_test_suite =
               (eval_query
                  (
                    [TermExp ("a", [])],
-                   [Clause (TermExp ("a", []), [ConstExp (BoolConst true)]); Clause (TermExp ("true", []), [ConstExp (BoolConst true)])],
+                   [Clause (TermExp ("a", []), [TermExp ("true", [])])],
                    []
                  )
               )
@@ -550,7 +550,7 @@ let evaluator_test_suite =
               (eval_query
                  (
                    [TermExp("age", [VarExp "X"; VarExp "Y"]); TermExp("female", [VarExp "X"])],
-                   [Clause (TermExp ("age", [ConstExp (StringConst "adam"); ConstExp (IntConst 10)]), [ConstExp (BoolConst true)]);Clause (TermExp ("age", [TermExp ("zaid", []); ConstExp (IntConst 5)]), [ConstExp (BoolConst true)]); Clause (TermExp ("age", [TermExp ("ann", []); ConstExp (IntConst 12)]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("zaid", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [ConstExp (StringConst "adam")]), [ConstExp (BoolConst true)]); Clause (TermExp ("female", [TermExp ("ann", [])]), [ConstExp (BoolConst true)])],
+                   [Clause (TermExp ("age", [ConstExp (StringConst "adam"); ConstExp (IntConst 10)]), [TermExp ("true", [])]);Clause (TermExp ("age", [TermExp ("zaid", []); ConstExp (IntConst 5)]), [TermExp ("true", [])]); Clause (TermExp ("age", [TermExp ("ann", []); ConstExp (IntConst 12)]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("zaid", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [ConstExp (StringConst "adam")]), [TermExp ("true", [])]); Clause (TermExp ("female", [TermExp ("ann",[])]),[TermExp ("true", [])])],
                    []
                  )
               )
@@ -562,7 +562,7 @@ let evaluator_test_suite =
               (eval_query
                  (
                    [TermExp("sibling", [TermExp("sally",[]); TermExp("erica",[])])],
-                   [Clause (TermExp ("parent_child", [VarExp "X"; VarExp "Y"]), [TermExp ("mother_child", [VarExp "X"; VarExp "Y"])]); Clause (TermExp ("parent_child", [VarExp "X"; VarExp "Y"]), [TermExp ("father_child", [VarExp "X"; VarExp "Y"])]); Clause (TermExp ("sibling", [VarExp "X"; VarExp "Y"]), [TermExp ("parent_child", [VarExp "Z"; VarExp "X"]); TermExp ("parent_child", [VarExp "Z"; VarExp "Y"])]); Clause (TermExp ("father_child", [TermExp ("mike", []); TermExp ("tom", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("father_child", [TermExp ("tom", []); TermExp ("erica", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("father_child", [TermExp ("tom", []); TermExp ("sally", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("mother_child", [TermExp ("trude", []); TermExp ("sally", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("true", []), [ConstExp (BoolConst true)])],
+                   [Clause (TermExp ("parent_child", [VarExp "X"; VarExp "Y"]), [TermExp ("mother_child", [VarExp "X"; VarExp "Y"])]); Clause (TermExp ("parent_child", [VarExp "X"; VarExp "Y"]), [TermExp ("father_child", [VarExp "X"; VarExp "Y"])]); Clause (TermExp ("sibling", [VarExp "X"; VarExp "Y"]), [TermExp ("parent_child", [VarExp "Z"; VarExp "X"]); TermExp ("parent_child", [VarExp "Z"; VarExp "Y"])]); Clause (TermExp ("father_child", [TermExp ("mike", []); TermExp ("tom", [])]), [TermExp ("true", [])]); Clause (TermExp ("father_child", [TermExp ("tom", []); TermExp ("erica", [])]), [TermExp ("true", [])]); Clause (TermExp ("father_child", [TermExp ("tom", []); TermExp ("sally", [])]), [TermExp ("true", [])]); Clause (TermExp ("mother_child", [TermExp ("trude", []); TermExp ("sally", [])]), [TermExp ("true", [])])],
                    []
                  )
               )
@@ -574,7 +574,7 @@ let evaluator_test_suite =
               (eval_query
                  (
                    [TermExp("sibling", [VarExp "Z"; VarExp "E"])],
-                   [Clause (TermExp ("parent_child", [VarExp "X"; VarExp "Y"]), [TermExp ("mother_child", [VarExp "X"; VarExp "Y"])]); Clause (TermExp ("parent_child", [VarExp "X"; VarExp "Y"]), [TermExp ("father_child", [VarExp "X"; VarExp "Y"])]); Clause (TermExp ("sibling", [VarExp "X"; VarExp "Y"]), [TermExp ("parent_child", [VarExp "Z"; VarExp "X"]); TermExp ("parent_child", [VarExp "Z"; VarExp "Y"])]); Clause (TermExp ("father_child", [TermExp ("mike", []); TermExp ("tom", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("father_child", [TermExp ("tom", []); TermExp ("erica", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("father_child", [TermExp ("tom", []); TermExp ("sally", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("mother_child", [TermExp ("trude", []); TermExp ("sally", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("true", []), [ConstExp (BoolConst true)])],
+                   [Clause (TermExp ("parent_child", [VarExp "X"; VarExp "Y"]), [TermExp ("mother_child", [VarExp "X"; VarExp "Y"])]); Clause (TermExp ("parent_child", [VarExp "X"; VarExp "Y"]), [TermExp ("father_child", [VarExp "X"; VarExp "Y"])]); Clause (TermExp ("sibling", [VarExp "X"; VarExp "Y"]), [TermExp ("parent_child", [VarExp "Z"; VarExp "X"]); TermExp ("parent_child", [VarExp "Z"; VarExp "Y"])]); Clause (TermExp ("father_child", [TermExp ("mike", []); TermExp ("tom", [])]), [TermExp ("true", [])]); Clause (TermExp ("father_child", [TermExp ("tom", []); TermExp ("erica", [])]), [TermExp ("true", [])]); Clause (TermExp ("father_child", [TermExp ("tom", []); TermExp ("sally", [])]), [TermExp ("true", [])]); Clause (TermExp ("mother_child", [TermExp ("trude", []); TermExp ("sally", [])]), [TermExp ("true", [])])],
                    []
                  )
               )
@@ -586,7 +586,7 @@ let evaluator_test_suite =
               (eval_query
                  (
                    [TermExp("animal", [VarExp "X"; VarExp "Y"])],
-                   [Clause (TermExp ("animal", [VarExp "X"; VarExp "Y"]), [TermExp ("cat", [VarExp "X"])]); Clause (TermExp ("cat", [TermExp ("tom", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("true", []), [ConstExp (BoolConst true)])],
+                   [Clause (TermExp ("animal", [VarExp "X"; VarExp "Y"]), [TermExp ("cat", [VarExp "X"])]); Clause (TermExp ("cat", [TermExp ("tom", [])]), [TermExp ("true", [])])],
                    []
                  )
               )
@@ -598,7 +598,7 @@ let evaluator_test_suite =
               (eval_query
                  (
                    [TermExp("animal", [VarExp "X"; VarExp "Y"]); VarExp "Z"],
-                   [Clause (TermExp ("animal", [VarExp "X"; VarExp "Y"]), [TermExp ("cat", [VarExp "X"])]); Clause (TermExp ("cat", [TermExp ("tom", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("true", []), [ConstExp (BoolConst true)])],
+                   [Clause (TermExp ("animal", [VarExp "X"; VarExp "Y"]), [TermExp ("cat", [VarExp "X"])]); Clause (TermExp ("cat", [TermExp ("tom", [])]), [TermExp ("true", [])])],
                    []
                  )
               )
@@ -610,7 +610,7 @@ let evaluator_test_suite =
               (eval_query
                  (
                    [VarExp "X"],
-                   [Clause (TermExp ("animal", [VarExp "X"; VarExp "Y"]), [TermExp ("cat", [VarExp "X"])]); Clause (TermExp ("cat", [TermExp ("tom", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("true", []), [ConstExp (BoolConst true)])],
+                   [Clause (TermExp ("animal", [VarExp "X"; VarExp "Y"]), [TermExp ("cat", [VarExp "X"])]); Clause (TermExp ("cat", [TermExp ("tom", [])]), [TermExp ("true", [])])],
                    []
                  )
               )
@@ -622,7 +622,7 @@ let evaluator_test_suite =
               (eval_query
                  (
                    [TermExp("animal", [VarExp "X"; VarExp "Y"]); VarExp "Z"],
-                   [Clause (TermExp ("animal", [VarExp "X"; VarExp "Y"]), [TermExp ("cat", [VarExp "X"])]); Clause (TermExp ("cat", [TermExp ("tom", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("true", []), [ConstExp (BoolConst true)])],
+                   [Clause (TermExp ("animal", [VarExp "X"; VarExp "Y"]), [TermExp ("cat", [VarExp "X"])]); Clause (TermExp ("cat", [TermExp ("tom", [])]), [TermExp ("true", [])])],
                    []
                  )
               )
@@ -634,37 +634,13 @@ let evaluator_test_suite =
               (eval_query
                  (
                    [TermExp("animal", [VarExp "X"; VarExp "Y"]); VarExp "Z"],
-                   [Clause (TermExp ("animal", [VarExp "X"; VarExp "Y"]), [TermExp ("cat", [VarExp "X"])]); Clause (TermExp ("cat", [TermExp ("tom", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("true", []), [ConstExp (BoolConst true)])],
+                   [Clause (TermExp ("animal", [VarExp "X"; VarExp "Y"]), [TermExp ("cat", [VarExp "X"])]); Clause (TermExp ("cat", [TermExp ("tom", [])]), [TermExp ("true", [])])],
                    [(VarExp "X", TermExp("eh",[VarExp "X"]))]
                  )
               )
               ([VarExp "Z"; VarExp "Y"; VarExp "X"; ConstExp(IntConst 10); TermExp("blah", [])])
               (3)
            ), "false\n";
-
-            (string_of_res
-              (eval_query
-                 (
-                   [TermExp("b", [TermExp("a", [TermExp("true",[])])])],
-                   [Clause (TermExp("b",[VarExp "X"]), [TermExp("a", [VarExp "X"])]); Clause (TermExp("a",[TermExp("true",[])]), [ConstExp (BoolConst true)]); Clause (TermExp ("true", []), [ConstExp (BoolConst true)])],
-                   []
-                 )
-              )
-              ([])
-              (0)
-            ), "false\n";
-
-            (string_of_res
-              (eval_query
-                 (
-                   [TermExp("b", [TermExp("a", [TermExp("true",[])])])],
-                   [Clause (TermExp("b",[VarExp "X"]), [TermExp("a", [VarExp "X"])]); Clause (TermExp("a",[TermExp("true",[])]), [TermExp ("true", [])]); Clause (TermExp ("true", []), [ConstExp (BoolConst true)])],
-                   []
-                 )
-              )
-              ([])
-              (0)
-            ), "false\n";
 
             (string_of_res
               (eval_query
@@ -682,93 +658,93 @@ let evaluator_test_suite =
            (string_of_db
               (add_dec_to_db
                  (
-                   Clause (TermExp ("cat", [TermExp ("tom", [])]), [ConstExp (BoolConst true)]),
+                   Clause (TermExp ("cat", [TermExp ("tom", [])]), [TermExp ("true", [])]),
                    []
                  )
               )
-           ), "[Clause (TermExp (\"cat\", [TermExp (\"tom\", [])]), [ConstExp (BoolConst true)])]";
+           ), "[Clause (TermExp (\"cat\", [TermExp (\"tom\", [])]), [TermExp (\"true\", [])])]";
 
            (string_of_db
               (add_dec_to_db
                  (
-                   Clause (TermExp ("cat", [TermExp ("tom", [])]), [ConstExp (BoolConst true)]),
-                   [Clause (TermExp ("true", []), [ConstExp (BoolConst true)])]
+                   Clause (TermExp ("cat", [TermExp ("tom", [])]), [TermExp ("true", [])]),
+                   []
                  )
               )
-           ), "[Clause (TermExp (\"cat\", [TermExp (\"tom\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"true\", []), [ConstExp (BoolConst true)])]";
+           ), "[Clause (TermExp (\"cat\", [TermExp (\"tom\", [])]), [TermExp (\"true\", [])])]";
 
            (string_of_db
               (add_dec_to_db
                  (
-                   Clause (TermExp ("true", []), [ConstExp (BoolConst true)]),
-                   [Clause (TermExp ("true", []), [ConstExp (BoolConst true)])]
+                   Clause (TermExp ("true", []), [TermExp ("true", [])]),
+                   []
                  )
               )
-           ), "[Clause (TermExp (\"true\", []), [ConstExp (BoolConst true)])]";
+           ), "[]";
 
            (string_of_db
               (add_dec_to_db
                  (
-                   Clause (TermExp ("true", [TermExp ("blah",[])]), [ConstExp (BoolConst true)]),
-                   [Clause (TermExp ("true", []), [ConstExp (BoolConst true)])]
+                   Clause (TermExp ("true", [TermExp ("blah",[])]), [TermExp ("true", [])]),
+                   []
                  )
               )
-           ), "[Clause (TermExp (\"true\", []), [ConstExp (BoolConst true)])]";
+           ), "[]";
 
            (string_of_db
               (add_dec_to_db
                  (
                    Query ([TermExp ("parent", [VarExp "X"; TermExp ("charles1", [])]); TermExp ("male", [VarExp "X"])]),
-                   [Clause (TermExp ("true", []), [ConstExp (BoolConst true)])]
+                   []
                  )
               )
-           ), "[Query ([TermExp (\"parent\", [VarExp \"X\"; TermExp (\"charles1\", [])]); TermExp (\"male\", [VarExp \"X\"])]); Clause (TermExp (\"true\", []), [ConstExp (BoolConst true)])]";
+           ), "[Query ([TermExp (\"parent\", [VarExp \"X\"; TermExp (\"charles1\", [])]); TermExp (\"male\", [VarExp \"X\"])])]";
 
            (* Evaluating a declaration *)
            (string_of_db
               (eval_dec
                  (
-                   Clause (TermExp ("cat", [TermExp ("tom", [])]), [ConstExp (BoolConst true)]),
-                   [Clause (TermExp ("true", []), [ConstExp (BoolConst true)])]
+                   Clause (TermExp ("cat", [TermExp ("tom", [])]), [TermExp ("true", [])]),
+                   []
                  )
               )
-           ), "[Clause (TermExp (\"cat\", [TermExp (\"tom\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"true\", []), [ConstExp (BoolConst true)])]";
+           ), "[Clause (TermExp (\"cat\", [TermExp (\"tom\", [])]), [TermExp (\"true\", [])])]";
 
            (string_of_db
               (eval_dec
                  (
                    Query ([TermExp ("male", [TermExp ("charles1", [])])]),
-                   [Clause (TermExp ("parent", [TermExp ("george1", []); TermExp ("sophia", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("sophia", []); TermExp ("elizabeth", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("james2", []); TermExp ("charles1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("catherine", []); TermExp ("charles1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("charles2", []); TermExp ("charles1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("elizabeth", []); TermExp ("james1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("charles1", []); TermExp ("james1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("female", [TermExp ("sophia", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("female", [TermExp ("elizabeth", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("female", [TermExp ("catherine", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("george1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("james2", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("charles2", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("charles1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("james1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("true", []), [ConstExp (BoolConst true)])]
+                   [Clause (TermExp ("parent", [TermExp ("george1", []); TermExp ("sophia", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("sophia", []); TermExp ("elizabeth", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("james2", []); TermExp ("charles1", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("catherine", []); TermExp ("charles1", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("charles2", []); TermExp ("charles1", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("elizabeth", []); TermExp ("james1", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("charles1", []); TermExp ("james1", [])]), [TermExp ("true", [])]); Clause (TermExp ("female", [TermExp ("sophia", [])]), [TermExp ("true", [])]); Clause (TermExp ("female", [TermExp ("elizabeth", [])]), [TermExp ("true", [])]); Clause (TermExp ("female", [TermExp ("catherine", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("george1", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("james2", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("charles2", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("charles1", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("james1", [])]), [TermExp ("true", [])])]
                  )
               )
-           ), "[Clause (TermExp (\"parent\", [TermExp (\"george1\", []); TermExp (\"sophia\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"sophia\", []); TermExp (\"elizabeth\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"james2\", []); TermExp (\"charles1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"catherine\", []); TermExp (\"charles1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"charles2\", []); TermExp (\"charles1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"elizabeth\", []); TermExp (\"james1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"charles1\", []); TermExp (\"james1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"female\", [TermExp (\"sophia\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"female\", [TermExp (\"elizabeth\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"female\", [TermExp (\"catherine\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"male\", [TermExp (\"george1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"male\", [TermExp (\"james2\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"male\", [TermExp (\"charles2\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"male\", [TermExp (\"charles1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"male\", [TermExp (\"james1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"true\", []), [ConstExp (BoolConst true)])]";
+           ), "[Clause (TermExp (\"parent\", [TermExp (\"george1\", []); TermExp (\"sophia\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"sophia\", []); TermExp (\"elizabeth\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"james2\", []); TermExp (\"charles1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"catherine\", []); TermExp (\"charles1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"charles2\", []); TermExp (\"charles1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"elizabeth\", []); TermExp (\"james1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"charles1\", []); TermExp (\"james1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"female\", [TermExp (\"sophia\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"female\", [TermExp (\"elizabeth\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"female\", [TermExp (\"catherine\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"male\", [TermExp (\"george1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"male\", [TermExp (\"james2\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"male\", [TermExp (\"charles2\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"male\", [TermExp (\"charles1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"male\", [TermExp (\"james1\", [])]), [TermExp (\"true\", [])])]";
 
            (string_of_db
               (eval_dec
                  (
                    Query ([TermExp ("male", [TermExp ("charles1", [])]);TermExp ("parent", [TermExp ("elizabeth", []); TermExp ("james1",[] )])]),
-                   [Clause (TermExp ("parent", [TermExp ("george1", []); TermExp ("sophia", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("sophia", []); TermExp ("elizabeth", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("james2", []); TermExp ("charles1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("catherine", []); TermExp ("charles1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("charles2", []); TermExp ("charles1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("elizabeth", []); TermExp ("james1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("charles1", []); TermExp ("james1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("female", [TermExp ("sophia", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("female", [TermExp ("elizabeth", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("female", [TermExp ("catherine", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("george1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("james2", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("charles2", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("charles1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("james1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("true", []), [ConstExp (BoolConst true)])]
+                   [Clause (TermExp ("parent", [TermExp ("george1", []); TermExp ("sophia", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("sophia", []); TermExp ("elizabeth", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("james2", []); TermExp ("charles1", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("catherine", []); TermExp ("charles1", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("charles2", []); TermExp ("charles1", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("elizabeth", []); TermExp ("james1", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("charles1", []); TermExp ("james1", [])]), [TermExp ("true", [])]); Clause (TermExp ("female", [TermExp ("sophia", [])]), [TermExp ("true", [])]); Clause (TermExp ("female", [TermExp ("elizabeth", [])]), [TermExp ("true", [])]); Clause (TermExp ("female", [TermExp ("catherine", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("george1", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("james2", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("charles2", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("charles1", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("james1", [])]), [TermExp ("true", [])])]
                  )
               )
-           ), "[Clause (TermExp (\"parent\", [TermExp (\"george1\", []); TermExp (\"sophia\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"sophia\", []); TermExp (\"elizabeth\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"james2\", []); TermExp (\"charles1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"catherine\", []); TermExp (\"charles1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"charles2\", []); TermExp (\"charles1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"elizabeth\", []); TermExp (\"james1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"charles1\", []); TermExp (\"james1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"female\", [TermExp (\"sophia\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"female\", [TermExp (\"elizabeth\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"female\", [TermExp (\"catherine\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"male\", [TermExp (\"george1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"male\", [TermExp (\"james2\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"male\", [TermExp (\"charles2\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"male\", [TermExp (\"charles1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"male\", [TermExp (\"james1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"true\", []), [ConstExp (BoolConst true)])]";
+           ), "[Clause (TermExp (\"parent\", [TermExp (\"george1\", []); TermExp (\"sophia\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"sophia\", []); TermExp (\"elizabeth\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"james2\", []); TermExp (\"charles1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"catherine\", []); TermExp (\"charles1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"charles2\", []); TermExp (\"charles1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"elizabeth\", []); TermExp (\"james1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"charles1\", []); TermExp (\"james1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"female\", [TermExp (\"sophia\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"female\", [TermExp (\"elizabeth\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"female\", [TermExp (\"catherine\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"male\", [TermExp (\"george1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"male\", [TermExp (\"james2\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"male\", [TermExp (\"charles2\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"male\", [TermExp (\"charles1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"male\", [TermExp (\"james1\", [])]), [TermExp (\"true\", [])])]";
 
            (string_of_db
               (eval_dec
                  (
                   Query ([TermExp ("parent", [VarExp "X"; TermExp ("charles1", [])]); TermExp ("male", [VarExp "X"])]),
-                  [Clause (TermExp ("parent", [TermExp ("george1", []); TermExp ("sophia", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("sophia", []); TermExp ("elizabeth", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("james2", []); TermExp ("charles1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("catherine", []); TermExp ("charles1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("charles2", []); TermExp ("charles1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("elizabeth", []); TermExp ("james1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("charles1", []); TermExp ("james1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("female", [TermExp ("sophia", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("female", [TermExp ("elizabeth", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("female", [TermExp ("catherine", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("george1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("james2", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("charles2", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("charles1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("james1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("true", []), [ConstExp (BoolConst true)])]
+                  [Clause (TermExp ("parent", [TermExp ("george1", []); TermExp ("sophia", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("sophia", []); TermExp ("elizabeth", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("james2", []); TermExp ("charles1", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("catherine", []); TermExp ("charles1", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("charles2", []); TermExp ("charles1", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("elizabeth", []); TermExp ("james1", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("charles1", []); TermExp ("james1", [])]), [TermExp ("true", [])]); Clause (TermExp ("female", [TermExp ("sophia", [])]), [TermExp ("true", [])]); Clause (TermExp ("female", [TermExp ("elizabeth", [])]), [TermExp ("true", [])]); Clause (TermExp ("female", [TermExp ("catherine", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("george1", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("james2", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("charles2", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("charles1", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("james1", [])]), [TermExp ("true", [])]); Clause (TermExp ("true", []), [TermExp ("true", [])])]
                  )
               )
-           ), "[Clause (TermExp (\"parent\", [TermExp (\"george1\", []); TermExp (\"sophia\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"sophia\", []); TermExp (\"elizabeth\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"james2\", []); TermExp (\"charles1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"catherine\", []); TermExp (\"charles1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"charles2\", []); TermExp (\"charles1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"elizabeth\", []); TermExp (\"james1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"charles1\", []); TermExp (\"james1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"female\", [TermExp (\"sophia\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"female\", [TermExp (\"elizabeth\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"female\", [TermExp (\"catherine\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"male\", [TermExp (\"george1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"male\", [TermExp (\"james2\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"male\", [TermExp (\"charles2\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"male\", [TermExp (\"charles1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"male\", [TermExp (\"james1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"true\", []), [ConstExp (BoolConst true)])]";
+           ), "[Clause (TermExp (\"parent\", [TermExp (\"george1\", []); TermExp (\"sophia\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"sophia\", []); TermExp (\"elizabeth\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"james2\", []); TermExp (\"charles1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"catherine\", []); TermExp (\"charles1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"charles2\", []); TermExp (\"charles1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"elizabeth\", []); TermExp (\"james1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"charles1\", []); TermExp (\"james1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"female\", [TermExp (\"sophia\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"female\", [TermExp (\"elizabeth\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"female\", [TermExp (\"catherine\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"male\", [TermExp (\"george1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"male\", [TermExp (\"james2\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"male\", [TermExp (\"charles2\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"male\", [TermExp (\"charles1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"male\", [TermExp (\"james1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"true\", []), [TermExp (\"true\", [])])]";
 
            (string_of_db
               (eval_dec
                  (
                   Query ([TermExp ("parent", [VarExp "X"; TermExp ("charles1", [])]); TermExp ("female", [VarExp "X"])]),
-                  [Clause (TermExp ("parent", [TermExp ("george1", []); TermExp ("sophia", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("sophia", []); TermExp ("elizabeth", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("james2", []); TermExp ("charles1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("catherine", []); TermExp ("charles1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("charles2", []); TermExp ("charles1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("elizabeth", []); TermExp ("james1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("parent", [TermExp ("charles1", []); TermExp ("james1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("female", [TermExp ("sophia", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("female", [TermExp ("elizabeth", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("female", [TermExp ("catherine", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("george1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("james2", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("charles2", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("charles1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("male", [TermExp ("james1", [])]), [ConstExp (BoolConst true)]); Clause (TermExp ("true", []), [ConstExp (BoolConst true)])]
+                  [Clause (TermExp ("parent", [TermExp ("george1", []); TermExp ("sophia", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("sophia", []); TermExp ("elizabeth", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("james2", []); TermExp ("charles1", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("catherine", []); TermExp ("charles1", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("charles2", []); TermExp ("charles1", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("elizabeth", []); TermExp ("james1", [])]), [TermExp ("true", [])]); Clause (TermExp ("parent", [TermExp ("charles1", []); TermExp ("james1", [])]), [TermExp ("true", [])]); Clause (TermExp ("female", [TermExp ("sophia", [])]), [TermExp ("true", [])]); Clause (TermExp ("female", [TermExp ("elizabeth", [])]), [TermExp ("true", [])]); Clause (TermExp ("female", [TermExp ("catherine", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("george1", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("james2", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("charles2", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("charles1", [])]), [TermExp ("true", [])]); Clause (TermExp ("male", [TermExp ("james1", [])]), [TermExp ("true", [])])]
                  )
               )
-           ), "[Clause (TermExp (\"parent\", [TermExp (\"george1\", []); TermExp (\"sophia\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"sophia\", []); TermExp (\"elizabeth\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"james2\", []); TermExp (\"charles1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"catherine\", []); TermExp (\"charles1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"charles2\", []); TermExp (\"charles1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"elizabeth\", []); TermExp (\"james1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"parent\", [TermExp (\"charles1\", []); TermExp (\"james1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"female\", [TermExp (\"sophia\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"female\", [TermExp (\"elizabeth\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"female\", [TermExp (\"catherine\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"male\", [TermExp (\"george1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"male\", [TermExp (\"james2\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"male\", [TermExp (\"charles2\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"male\", [TermExp (\"charles1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"male\", [TermExp (\"james1\", [])]), [ConstExp (BoolConst true)]); Clause (TermExp (\"true\", []), [ConstExp (BoolConst true)])]";
+           ), "[Clause (TermExp (\"parent\", [TermExp (\"george1\", []); TermExp (\"sophia\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"sophia\", []); TermExp (\"elizabeth\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"james2\", []); TermExp (\"charles1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"catherine\", []); TermExp (\"charles1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"charles2\", []); TermExp (\"charles1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"elizabeth\", []); TermExp (\"james1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"parent\", [TermExp (\"charles1\", []); TermExp (\"james1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"female\", [TermExp (\"sophia\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"female\", [TermExp (\"elizabeth\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"female\", [TermExp (\"catherine\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"male\", [TermExp (\"george1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"male\", [TermExp (\"james2\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"male\", [TermExp (\"charles2\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"male\", [TermExp (\"charles1\", [])]), [TermExp (\"true\", [])]); Clause (TermExp (\"male\", [TermExp (\"james1\", [])]), [TermExp (\"true\", [])])]";
            
            
         ]

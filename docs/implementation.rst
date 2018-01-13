@@ -77,7 +77,7 @@ and is represented as an abstract syntax tree in a way that reflects this:
    Clause (
        TermExp ("cat", [TermExp ("tom", [])]),
        [
-           ConstExp (BoolConst true)
+           TermExp ("true", [])
        ]
    )
 
