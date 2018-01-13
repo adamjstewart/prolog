@@ -52,9 +52,10 @@ let common_test_suite =
             string_of_exp (
                 TermExp ("coord", [VarExp "X"; VarExp "Y"; VarExp "Z"])
             ), "TermExp (\"coord\", [VarExp \"X\"; VarExp \"Y\"; VarExp \"Z\"])";
+            string_of_exp_list (
+                [VarExp "X"; ConstExp (IntConst 10); TermExp ("blah", [VarExp "Y"; ConstExp (StringConst "hi"); TermExp ("end", [])])]
+            ), "[VarExp \"X\"; ConstExp (IntConst 10); TermExp (\"blah\", [VarExp \"Y\"; ConstExp (StringConst \"hi\"); TermExp (\"end\", [])])]";
             
-            string_of_atom (TermExp("blah",[])),    "blah";
-            (try string_of_atom (VarExp "v") with Failure s ->  s), "not needed";
             
             (* Declarations *)
             string_of_dec (
@@ -73,7 +74,44 @@ let common_test_suite =
             (print_db [
                 Clause (TermExp ("foo", []), [ConstExp (BoolConst true)]);
                 Query ([TermExp ("bar", [])])
-            ]; "print_db"), "print_db";
+               ]; "print_db"), "print_db";
+
+            (* Readable Constant Strings *)
+            readable_string_of_const (IntConst (-3)),    "-3";
+            readable_string_of_const (FloatConst 27.3),  "27.3";
+            readable_string_of_const (StringConst "\n"), "\"\\n\"";
+            readable_string_of_const (BoolConst true),   "true";
+            readable_string_of_const (BoolConst false),  "false";
+
+            (* Readable Expression Strings *)
+            readable_string_of_exp (VarExp "X"),             "X";
+            readable_string_of_exp (ConstExp (IntConst 5)),  "5";
+            readable_string_of_exp (
+                TermExp ("coord", [VarExp "X"; VarExp "Y"; VarExp "Z"])
+            ), "coord(X, Y, Z)";
+            readable_string_of_exp (
+                TermExp ("zaid", [])
+            ), "zaid";
+
+            (* Substitutions *)
+            string_of_subs (
+                []
+            ), "[]";
             
+            string_of_subs (
+                [(VarExp "X", TermExp ("hah", []))]
+            ), "[(VarExp \"X\", TermExp (\"hah\", []))]";
+
+            string_of_subs (
+                [(VarExp "X", TermExp ("hah", [])); (VarExp "Y", ConstExp (IntConst 10))]
+            ), "[(VarExp \"X\", TermExp (\"hah\", [])); (VarExp \"Y\", ConstExp (IntConst 10))]";
+
+            string_of_unify_res (
+                None
+            ), "None";
+
+            string_of_unify_res (
+                Some([(VarExp "X", TermExp ("hah", [])); (VarExp "Y", ConstExp (IntConst 10))])
+            ), "[(VarExp \"X\", TermExp (\"hah\", [])); (VarExp \"Y\", ConstExp (IntConst 10))]";
         ]
     )

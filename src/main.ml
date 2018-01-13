@@ -13,7 +13,6 @@ let _ =
      then print_endline "\nWelcome to the Prolog Interpreter\n"
      else ());
     let rec loop db = (
-        try
             let lexbuf = Lexing.from_channel stdin
             in (
                 if is_interactive
@@ -28,20 +27,26 @@ let _ =
 			    | r -> r
 			)
 		    ) lexbuf
+                    (* evaluate dec and get a new db *)
                     in let newdb = eval_dec (dec,db)
-                    in loop newdb
+                    in loop newdb (* loop again with new db *)
                 with
-                | Failure s -> (
+                | Failure s -> ( (* in case of an error *)
                     print_newline();
 		    print_endline s;
                     print_newline();
                     loop db
                 )
-                | Parser.Error -> (
-                    print_string "\ndoes not parse\n";
+                | Parser.Error -> ( (* failed to parse input *)
+                    print_string "\nDoes not parse\n";
+                    loop db
+                )
+                | Lexer.EndInput -> exit 0 (* EOF *)
+                | _ -> ( (* Any other error *)
+                    print_string "\nSome error\n";
                     loop db
                 )
             );
-        with Lexer.EndInput -> exit 0
+        
     )
     in (loop [Clause (TermExp ("true", []), [ConstExp (BoolConst true)])])

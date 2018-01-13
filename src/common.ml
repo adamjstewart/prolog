@@ -45,24 +45,63 @@ let rec string_of_exp e =
     | ConstExp c -> "ConstExp (" ^ (string_of_const c) ^ ")"
     | TermExp (f, args) ->
         let func = String.escaped f in
-            "TermExp (\"" ^ func ^ "\", [" ^ (String.concat "; " (List.map string_of_exp args)) ^ "])"
+          "TermExp (\"" ^ func ^ "\", [" ^
+            (String.concat "; " (List.map string_of_exp args)) ^
+              "])"
 
 
-let string_of_goals g = "[" ^ (String.concat "; " (List.map string_of_exp g)) ^ "]"
+let string_of_exp_list g =
+    "[" ^ (String.concat "; " (List.map string_of_exp g)) ^ "]"
                       
 let string_of_dec d =
     match d with
-    | Clause (e1, g) -> "Clause (" ^ (string_of_exp e1) ^ ", " ^ (string_of_goals g) ^ ")"
-    | Query g -> "Query (" ^ (string_of_goals g) ^ ")"
+    | Clause (e1, g) -> "Clause (" ^
+                         (string_of_exp e1) ^ ", " ^
+                           (string_of_exp_list g) ^ ")"
+    | Query g -> "Query (" ^ (string_of_exp_list g) ^ ")"
 
 let string_of_db db =
     "[" ^ (String.concat "; " (List.map string_of_dec db)) ^ "]"
 
+
+let string_of_subs s =
+    "[" ^ (String.concat "; "
+                         (List.map
+                            (fun (x,y) ->
+                              "(" ^ (string_of_exp x) ^
+                                ", " ^
+                                  (string_of_exp y) ^
+                                    ")"
+                            ) s)
+          ) ^ "]"
+
+let string_of_unify_res s =
+    match s with
+    | None -> "None"
+    | Some(l) -> string_of_subs l
+
+(* Convert ConstExp to a readable string *)
+let readable_string_of_const c =
+    match c with
+    | IntConst i -> string_of_int i
+    | FloatConst f -> string_of_float f
+    | StringConst s -> "\"" ^ String.escaped s ^ "\""
+    | BoolConst b -> string_of_bool b
+
+(* Convert exp to a readable string *)
+let rec readable_string_of_exp e =
+    match e with
+    | VarExp v -> v
+    | ConstExp c -> readable_string_of_const c
+    | TermExp(s,l) -> s ^
+                       (if List.length l > 0
+                        then "(" ^
+                               (String.concat
+                                  ", "
+                                  (List.map readable_string_of_exp l)) ^
+                                 ")"
+                        else "")
+
+(* Print a db *)
 let print_db db =
     print_endline (string_of_db db)
-
-let string_of_atom a =
-    match a with
-    | (TermExp(s,_)) -> s
-    | _ -> raise(Failure "not needed")
-               
