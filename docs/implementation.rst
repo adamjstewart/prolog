@@ -254,18 +254,18 @@ The ``eval_query`` function finds answers to queries in a deapth-first fashion a
 
 Although not shown in the pseudocode, when we pick a clause out of the database, we rename all variables occuring in the clause to fresh variable names. This avoids a mess with variable bindings when the same clause is possibly picked again for evaluating the query.
 
-Below is an example Prolog program and its resulting query evaluation tree. The only unification shown is the one used to match the subgaol agianst rules and facts from the database. Variables are represented in between double quotes (ie. ``"Z"``, ``"1"``, ``"X"``, ``"2"``). Variable renaming is shown in the two cases when the rule for ``animal`` is selected from the database for unification. The result for each ``eval_query`` node in the tree contains all the results from all subtrees of that node. In the black font is the database, in red font are the calls that failed and, in the green font are the calls that were successful.
+Below is an example Prolog program and its resulting query evaluation tree. The only unification shown is the one used to match the subgaol agianst rules and facts from the database. Variables are represented in between double quotes (ie. ``"Z"``, ``"1"``, ``"X"``, ``"2"``). Variable renaming is shown in the two cases when the rule for ``animal`` is selected from the database for unification. The result for each ``eval_query`` node in the tree contains all the results from all subtrees of that node. In the black font is the database, in red font are the calls that failed and, in the green font are the calls that were successful. The numbers on the edges represent the order in which the nodes are visited.
 
 
 .. code-block:: prolog
 
    cat(tom).
-   cat(jerry).
    animal(X) :- cat(X).
+   cat(jerry).
 
    ?- animal(Z).
 
-.. figure:: query_eval.png
+.. figure:: query_eval.svg
 
 
 Printing Query Results
