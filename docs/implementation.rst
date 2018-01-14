@@ -331,9 +331,9 @@ When we asked for an extension, Professor Gunter suggested to leave strings and 
 We haven't implemented any operations on strings, integers, and floats but these operations were not in our proposed grammar.
 
 
-Major Prolog implementations implement disjunction between subgoals along with conjunction. Implementing disjunction would have significantly complicated our implemnetation so we didn't implement it.
+Major Prolog implementations implement disjunction between subgoals along with conjunction. Implementing disjunction would have significantly complicated our implemnetation so we didn't implement it. Also, the grammar we proposed didn't include disjunction between subgoals.
 
-Also, we don't implement Prolog's unification operator ``=`` as well as any other built-in predicate besides the ``true`` predicate.
+Also, we don't implement Prolog's unification operator ``=`` as well as any other built-in predicate besides the ``true`` predicate. Again, our proposed grammar didn't include these either.
 
 One feature we had implemented in the evaluator but later took out was prompting the user after finding a result in query evaluation to see if the user wanted more results. We had implemented this but as this feature requires user interaction, it became very difficult to write unit tests for. This feature is present in all of the major Prolog implemnetations as it can help avoid a lot of evaluation if the user already got the answer they were looking for. We decided it was better to be able to test the evaluator thoroughly with unit tests than to have this feature so we removed it.
 
