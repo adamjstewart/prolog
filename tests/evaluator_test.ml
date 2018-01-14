@@ -381,6 +381,19 @@ let evaluator_test_suite =
            (string_of_res
               (eval_query
                  (
+                   [TermExp ("true", [])],
+                   [],
+                   []
+                 )
+              )
+              ([])
+              (0)
+           ), "true\n";
+
+           
+           (string_of_res
+              (eval_query
+                 (
                    [TermExp ("male", [TermExp ("elizabeth", [])])],
                    [],
                    []

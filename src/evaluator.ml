@@ -225,6 +225,15 @@ let rec eval_query (q, db, env) =
     )
     | (g1 :: gl) -> (  (* have at least one more subgoal (g1) to prove *)
         match g1 with
+        (* if goal is the true predicate *)
+        | TermExp("true", []) -> (
+          eval_query (
+              gl,
+              db,
+              env
+            )
+        )
+        (* if goal is some other predicate *)
         | TermExp(_,_) -> (
         (* iterate over the db *)
         List.fold_right (
