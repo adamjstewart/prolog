@@ -259,7 +259,7 @@ Below is an example Prolog program and its resulting query evaluation tree. The 
 
    ?- animal(Z).
 
-.. figure:: query_eval.png
+.. image:: query_eval.*
 
 
 Printing Query Results
