@@ -224,7 +224,7 @@ The pseudocode for our implementation of the algorithm to evaluate a query ``G``
    eval_query (G, db, subs):
      if G is empty:
         return [subs]
-     else if G = (g1 ∪ g):
+     else if G = (g1 :: g):
         results = []
 	G' = g
 	if g1 = true:
