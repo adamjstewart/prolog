@@ -194,10 +194,147 @@ The following graph represents the connections between each non-terminal in our 
 .. graphviz:: parser.dot
 
 
+
+
+
 Evaluator
 ^^^^^^^^^
+
+The top level funtion of the evaluator is ``eval_dec`` in ``evaluator.ml``. The function takes in a decleration to evaluate and a database. The database is a list of declerations, more specifically ``ClauseExp``, representing the facts and rules the user has entered so far. The decleration to evaluate can be either a ``ClauseExp``, representing a new fact or rule to add to the database, or a ``QueryExp``, representing a query to answer.
+
+Evaluating a Clause
+"""""""""""""""""""
+
+To evaluate a decleration ``d`` that is a ``ClauseExp`` with a database ``db``, the evluator returns a new database with ``d`` prepended to ``db``. The one exception to this is if ``d`` is giving meaning to the ``true`` atom. We consider ``true`` to be a built-in predicate uesd only to define facts and thus users are not allowed to define it. In the case the user tries to add a clause for the ``true`` atom, a message is printed telling the user that that isn't possible and ``db``, the original database, is returned.
+
+Evaluating a Query
+""""""""""""""""""
+
+To evaluate a decleration ``d`` that is a ``QueryExp`` (a goal) with a database ``db``, the evaluator has to use the facts and rules in ``db`` to prove all of the subgoals in the query ``d``. A subgoal is an element of the list of ``exp`` that defines a ``QueryExp``. A query asks to prove all of (ie. the conjunction of) all of the subgoals. After evaluating all possible results, the evaluator prints each result including the binding of all the veraibales in the query, if there were any, then prints ``"true"`` if there was at least one result and ``"false"`` otherwise, and returns ``db``, the database passed in.
+
+The Query Evaluation Algorithm
+''''''''''''''''''''''''''''''
+
+Our query, or goal, evaluation algorithm was adapted from an algorithm presented by Dr. Hrafn Loftsson of Reykjavik University in one of his `video lectures <https://www.youtube.com/watch?v=BQMSs1wJvnc&t=530s>`_. We used the behavior of query evaluation in `SWI-Prolog <http://www.swi-prolog.org/pldoc/man?section=syntax>`_ as the example for our evaluator to follow. This includes things like the order in which subgoals are evaluated and the order in which the database is walked to find rules and facts to prove a subgoal.
+
+The pseudocode for our implementation of the algorithm to evaluate a query ``G`` with a database ``db`` is listed here:
+
+.. code-block:: none
+
+   eval_query (G, db, subs):
+     if G is empty:
+        return [subs]
+     else if G = (g1 ∪ g):
+        results = []
+	G' = g
+	if g1 = true:
+	   results = results @ eval_query(G', db, subs)
+	else:
+           foreach ClauseExp(h,[b1 .. bn]) in db:
+              if unify(g1, h) = σ1:
+                 if n = 1 and b1 = true:
+	            G' = σ1(g)
+	         else:
+	            G' = σ1([b1 .. bn] @ g)
+	         if unify(σ1 @ subs) = σ2:
+		    results = results @ eval_query(G', db,  σ2)
+	         else:
+	            continue
+		 
+              else:
+	         continue
+
+        return results
+	      
+The first thing the ``eval_query`` function does is check if ``G`` is empty, meaning that there are no subgoals in ``G`` to prove and that the substitutions in ``subs`` provide one solution for the query. Since there is nothing left to prove for ``G`` the function returns the substitutions inside of a list. This is necessary because at the end ``eval_query`` returns a list of substitutions, where each subsitituion proved the query.
+
+If ``G`` isn't empty, then there is at least one subgoal, ``g1``, to prove and ``g`` the possibly empty list of other subgoals. Since ``g1`` is the head of the list, it will be the leftmost subgoal in the goal. So we always try to prove the left most subgoal, just like how `SWI-Prolog <http://www.swi-prolog.org/pldoc/man?section=syntax>`_ does it. If ``g1`` is the ``true`` predicate then we don't need to prove it and can move on to the other subgoals in ``g``. Otherwise, to prove ``g1``, we iterate over the database ``db`` in the order in which the entries in the database were entered and loop for each rule or fact in the database that matches with ``g1``, just like how `SWI-Prolog <http://www.swi-prolog.org/pldoc/man?section=syntax>`_ does it. A rule or fact matching ``g1`` implies that the rule or fact can be used to prove ``g1``. Since both facts and rules are represented as a ``ClauseExp`` with a head (``h``) and body (``[b1 .. bn]``) component, to match ``g1`` with a rule or fact we use unification on the contraint ``g1 = h``. If unification succeeds and a substitution ``σ1`` is returned, we can use that rule or fact to prove ``g1``. If the entry from the db was a fact, the only subgoals left to prove are in ``g``, so our new goal ``G'`` gets assigned to the result of applying the substitution ``σ1`` to ``g``. If the etry from the db that matched ``g1`` was a rule, then we have more subgoals to prove, more specifically the lift of subgoals from the body of the rule, ``[b1 .. bn]``, along with the other remaining subgoals from ``g``. So in this case the ``G'`` is set to the substitution ``σ1`` applied to  result of prepending the body of the rule to ``g``. Then the substitution ``σ1`` is appended to the substitutions passed into eval_query, ``subs``, and the result is unified  to give us a new substution ``σ2`` for proving this answer. We add to our list of results thus far ``results`` the result of recursively calling ``eval_query`` with ``G'`` as the new goal and ``σ2`` as the new ``subs``. For a subgoal ``g1``, this process happens for each item in the database.
+
+The ``eval_query`` function finds answers to queries in a deapth-first fashion as it always recurses after a fact or a rule matches the current leftmsot subgoal ``g1``. When that call returns because either ``G'`` was proven or disproven then it continues on to the next fact or rule in the database. backtracking is inherently handled as the leftmost subgoal ``g1`` is always matched against all rules and facts in the database. So all possible results for a goal ``G`` will be present in ``result``  when the iteration over the database is done.
+
+Although not shown in the pseudocode, when we pick a clause out of the database, we rename all variables occuring in the clause to fresh variable names. This avoids a mess with variable bindings when the same clause is possibly picked again for evaluating the query.
+
+Below is an example Prolog program and its resulting query evaluation tree. The only unification shown is the one used to match the subgaol agianst rules and facts from the database. Variables are represented in between double quotes (ie. ``"Z"``, ``"1"``, ``"X"``, ``"2"``). Variable renaming is shown in the two cases when the rule for ``animal`` is selected from the database for unification. The result for each ``eval_query`` node in the tree contains all the results from all subtrees of that node. In the black font is the database, in red font are the calls that failed and, in the green font are the calls that were successful.
+
+
+.. code-block:: prolog
+
+   cat(tom).
+   cat(jerry).
+   animal(X) :- cat(X).
+
+   ?- animal(Z).
+
+.. figure:: query_eval.png
+
+
+Printing Query Results
+''''''''''''''''''''''
+
+Since the evaluator returns a database to the interpretor, the evaluator needs to print the results of the query before returning. If the results are empty the evaluator prints ``false`` for the user and returns. If there is at least 1 item in the results the evaluator prints all of the bindings for the variables from the user's query and then prints ``true`` and returns. For each result in result, for each variable in the user's query, the result is checked for a binding for that variable. If the binding is to another variable or there is no binding then that variable is free and the user gets told that the variable is free. Otherwise, the binding is printed.
+
+The Unification Algorithm
+'''''''''''''''''''''''''
+
+Unification is at the heart of the query evaluation algorithm. It is used to match a rule or fact from the database to a subgoal to see if that rule or fact can be used to prove the subgoal. It is also used update the substitutions to use for the ``eval_query`` recursive call when a rule or fact from the database has matched the subgoal. The algorithm is mostly the same as the one that was presented in `lecture 16 <https://courses.engr.illinois.edu/cs421/fa2017/CS421D/lectures/15-16-poly-type-infer-unif.pdf>`_ and we implemented for `ML4 <https://courses.engr.illinois.edu/cs421/fa2017/CS421D/mps/ML4/>`_ during the semester, except for a few differences.
+
+In our case ``VarExp`` represents a variable, ``TermExp`` represents a functor or atom, and ``ConstExp`` represents a constant integer, float, or string. As such we needed to add a orient case for the situation when there is a constraint ``(s, t)`` where ``s`` is a ``ConstExp`` and ``t`` is a ``VarExp``, a fail case for the situation when there is a constraint ``(s, t)`` where ``s`` is a ``TermExp`` and ``t`` is a ``ConstExp``, and a fail case for  the situation when there is a constraint ``(s, t)`` where ``s`` is a ``ConstExp`` and ``t`` is a ``ConstExp`` and ``s != t``.
+
+The modified unification algorithm psuedocode is listed here (inspired by the algorithm that was presented in `lecture 16 <https://courses.engr.illinois.edu/cs421/fa2017/CS421D/lectures/15-16-poly-type-infer-unif.pdf>`_):
+
+.. code-block:: none
+
+   let S = {(s1, t1), (s2, t2), ... , (sn, tn)} be a set of constraints
+
+   case S = {}; unify(S) = []
+
+   case S = {(s, t)} ∪ S':
+     Delete
+        if s = t
+	then unify(S) = unify(S')
+	else Fail
+     Decompose
+        if s = TermExp(f, [q1, ... , qm]) and t = TermExp(f, [r1, ... , rm])
+	then unify(S) = unify({(q1, r1), ... , (qm, rm)} ∪ S’)
+	else
+           if s = TermExp(f, [q1, ... , qm]) and t = ConstExp(c)
+	   then Fail
+     Orient
+        if t = VarExp(x) and (s = TermExp(f, [q1, ... , qm]) or s = ConstExp(c))
+	then unify(S) = unify({(t, s)} ∪ S’)
+     Eliminate
+        if s = VarExp(x) is a variable and s doesn't occur in t
+	then
+	  let sub = {s -> t};
+	  let S'' = sub(S');
+	  let phi = unify(S'');
+	  unify(S) = {s -> phi(t)} o phi
+     Extra Fail Case
+        if s = ConstExp(c) and t = ConstExp(d) and s != t
+	then Fail
+
+     All other cases cause unify to Fail.
+     
+
+Interpreter
+^^^^^^^^^^^
+
+The interpreter, the front-end program in ``main.ml``, is derived from the ``picomlInterp.ml`` file given to us for `MP5 <https://courses.engr.illinois.edu/cs421/fa2017/CS421D/mps/MP5/>`_ during the semester. It essentially loops until the lexer reaches ``EOF`` and raises the ``Lexer.EndInput`` exception. The loop function takes in a list of declerations which is the database that will be used to evaluate whatever decelartion the user inputs. Each iteration of the loop a lexbuf is created from user input to standard in which is then passed into the parser to get the AST representation of the input. The AST representation of the input and the database are passed into the evaluator to evaluate the input and return a, possibly updated, database which is passed into a recursive call of the loop. If there are any exceptions raised by the lexer, parser, or evaluator, a message is printed for the user and the loop is recursively called with the same database that was passed in. The loop ends only when the lexer sees ``EOF``.
 
 Status
 ------
 
-.. todo:: status of the project -- what works well, what works partially, and and what is not implemented at all. You MUST compare these with your original proposed goals in the project proposal.
+After thorough testing, we believe our components like the lexer, parser, and evaluator fully implement all of thee `grammar <https://github.com/simonkrenger/ch.bfh.bti7064.w2013.PrologParser/blob/master/doc/prolog-bnf-grammar.txt>`_ we mentioned in our proposal.
+
+When we asked for an extension, Professor Gunter suggested to leave strings and numbers out of the implmenetation unless we had enough time. We implemneted string, int and float constants as well in all components.
+
+We haven't implemented any operations on strings, integers, and floats but these operations were not in our proposed grammar.
+
+
+Major Prolog implementations implement disjunction between subgoals along with conjunction. Implementing disjunction would have significantly complicated our implemnetation so we didn't implement it.
+
+Also, we don't Prolog's unification operator `=` as well as any other built-in predicate besides the `true` predicate.
+
+One feature we had implemented in the evaluator but later took out was prompting the user after finding a result in query evaluation to see if the user wanted more results. We had implemented this but as this feature requires user interaction, it became very difficult to write unit tests for. This feature is present in all of the major Prolog implemnetations as it can help avoid a lot of evaluation if the user already got the answer they were looking for. We decided it was better to be able to test the evaluator thoroughly with unit tests than to have this feature so we removed it.
+
+
