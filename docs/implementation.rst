@@ -16,7 +16,9 @@ Components
 Build System
 ^^^^^^^^^^^^
 
-In order to build the project, we used the `OCamlbuild <https://github.com/ocaml/ocamlbuild>`_ build system. OCamlbuild allowed us to write a greatly simplified Makefile, as OCamlbuild performs a static analysis of the code to determine the correct order in which to build and link every file. Our Makefile has both ``native`` and ``byte`` targets to build either a native or bytecode executable, respectively. OCamlbuild uses `OCamlfind <http://projects.camlcity.org/projects/findlib.html>`_ to locate external dependencies like Menhir.
+In order to build the project, we used the `OCamlbuild <https://github.com/ocaml/ocamlbuild>`_ build system. OCamlbuild allowed us to write a greatly simplified Makefile, as OCamlbuild performs a static analysis of the code to determine the correct order in which to build and link every file. Additionally, OCamlbuild uses `OCamlfind <http://projects.camlcity.org/projects/findlib.html>`_ to locate external dependencies like Menhir.
+
+Our Makefile has both ``native`` and ``byte`` targets to build either a native or bytecode executable, respectively. By default, ``make`` builds a ``main.byte`` executable. When executed, this program provides an interactive interpreter for entering Prolog clauses and queries.
 
 To view our OCamlbuild configuration, see ``_tags``.
 
