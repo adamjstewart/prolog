@@ -20,7 +20,7 @@ In the Prolog program below, ``cat(tom)`` and ``animal(X)`` are both compound te
 
    ?- animal(X).
 
-The unification algorithm, similar to the one that was presented in `lecture 16 <https://courses.engr.illinois.edu/cs421/fa2017/CS421D/lectures/15-16-poly-type-infer-unif.pdf>`_ and we implemented for `ML4 <https://courses.engr.illinois.edu/cs421/fa2017/CS421D/mps/ML4/>`_ during the semester, is at the center of query evaluation in Prolog. The lexer and parser for Prolog can be implemented in a similar way to how we implemented a lexer and parser for PicoML in `MP4 <https://courses.engr.illinois.edu/cs421/fa2017/CS421D/mps/MP4/>`_ and `ML5 <https://courses.engr.illinois.edu/cs421/fa2017/CS421D/mps/ML5/>`_, respectively, during the semester. Thus, this project should thoroughly test our understanding of some of the most important topics from the course.
+The unification algorithm, similar to the one that was presented in `lecture 16 <https://courses.engr.illinois.edu/cs421/fa2017/CS421D/lectures/15-16-poly-type-infer-unif.pdf>`_ and we implemented for `ML4 <https://courses.engr.illinois.edu/cs421/fa2017/CS421D/mps/ML4/>`_ during the semester, is at the center of query evaluation in Prolog. The lexer and parser for Prolog can be implemented in a similar way to how we implemented a lexer and parser for PicoML in `MP4 <https://courses.engr.illinois.edu/cs421/fa2017/CS421D/mps/MP4/>`_ and `ML5 <https://courses.engr.illinois.edu/cs421/fa2017/CS421D/mps/ML5/>`_, respectively, during the semester. Thus, this project should thoroughly tests our understanding of some of the most important topics from the course.
 
 Goals
 -----
