@@ -295,13 +295,13 @@ The modified unification algorithm psuedocode is listed here (inspired by the al
 	else Fail
      Decompose
         if s = TermExp(f, [q1, ... , qm]) and t = TermExp(f, [r1, ... , rm])
-	then unify(S) = unify({(q1, r1), ... , (qm, rm)} ∪ S’)
+	then unify(S) = unify({(q1, r1), ... , (qm, rm)} ∪ S')
 	else
            if s = TermExp(f, [q1, ... , qm]) and t = ConstExp(c)
 	   then Fail
      Orient
         if t = VarExp(x) and (s = TermExp(f, [q1, ... , qm]) or s = ConstExp(c))
-	then unify(S) = unify({(t, s)} ∪ S’)
+	then unify(S) = unify({(t, s)} ∪ S')
      Eliminate
         if s = VarExp(x) and s does not occur in t
 	then
