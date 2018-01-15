@@ -29,7 +29,7 @@ This file contains the code needed to evaluate our expressions.
 lexer.mll
 ---------
 
-This file contains the lexer.
+This file defines the lexer.
 
 .. literalinclude:: ../src/lexer.mll
 
@@ -43,6 +43,6 @@ This file contains the main interpreter program.
 parser.mly
 ----------
 
-This file contains the parser.
+This file defines the parser.
 
 .. literalinclude:: ../src/parser.mly
