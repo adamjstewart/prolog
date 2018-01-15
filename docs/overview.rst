@@ -11,7 +11,7 @@ Prolog is a logic programming language used in fields like artificial intelligen
 
 Facts and rules (ie. Horn Clauses) are used to express the program logic in Prolog. Prolog computation involves querying a database of facts and rules. If a given query can be proven for a given database, Prolog outputs the answers for the query and a message like "Yes" or "true" to tell the user that the query was proven. If the query can't be proven, either a message like "false" or an error is outputted to the user. A query can have comma separated subgoals and the evaluation of the query is the evaluation of the conjunction between all of the subgoals.
 
-In the Prolog program below, ``cat(tom)`` and ``animal(X)`` are each a compound term, ``tom`` is an atom, ``X`` is a variable, ``cat(tom).`` is a fact, ``animal(X) :- cat(X).`` is a rule (or Horn Clause), and ``?- animal(X).`` is a query. In this program, the query``?- animal(X).`` evaluates to true where the one and only mapping for the variable ``X`` is ``X = tom``.
+In the Prolog program below, ``cat(tom)`` and ``animal(X)`` are each a compound term, ``tom`` is an atom, ``X`` is a variable, ``cat(tom).`` is a fact, ``animal(X) :- cat(X).`` is a rule (or Horn Clause), and ``?- animal(X).`` is a query. In this program, the query ``?- animal(X).`` evaluates to true where the one and only mapping for the variable ``X`` is ``X = tom``.
 
 .. code-block:: prolog
 
