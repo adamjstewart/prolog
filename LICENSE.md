@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2017 Adam J. Stewart and Zaid Qureshi
+Copyright (c) 2017-2018 Adam J. Stewart and Zaid Qureshi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
