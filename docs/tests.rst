@@ -62,6 +62,8 @@ Continuous Integration
 
 Each commit to the GitHub repository can introduce new features, but it can also introduce bugs. In order to prevent these bugs from creeping in, we use `Travis CI <https://travis-ci.org/>`_ for continuous integration testing. Travis runs our unit and documentation tests after each commit, and reports any problems to the developers when the build crashes. It runs these tests using the five latest versions of OCaml (4.02 - 4.06) to make sure that our Prolog interpreter works with any modern version of OCaml.
 
+Travis does not have official OCaml support, so we had to manually install each version of OCaml in our CI script. Our Travis configuration was partially inspired by the `ocaml-ci-scripts <https://github.com/ocaml/ocaml-ci-scripts>`_ repository.
+
 To view the results of the latest build, see https://travis-ci.org/adamjstewart/prolog. For our Travis configuration, see ``.travis.yml``.
 
 
