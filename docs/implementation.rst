@@ -332,7 +332,7 @@ When we asked for an extension, Professor Gunter suggested we leave strings and 
 
 Major Prolog implementations implement disjunction between subgoals along with conjunction. Implementing disjunction would have significantly complicated our implementation so we did not implement it. Also, the grammar we proposed did not include disjunction between subgoals.
 
-Also, we do not implement Prolog's unification operator ``=`` as well as any other built-in predicate besides the ``true`` predicate. Prolog list types are not implemented either. Again, our proposed grammar did not include these elements. In our implementation, strings and atoms can't be unified but they can be in major Prolog implementations.
+Also, we do not implement Prolog's unification operator ``=`` as well as any other built-in predicate besides the ``true`` predicate. Prolog list types are not implemented either. Again, our proposed grammar did not include these elements. In our implementation, strings and atoms can't be unified, but in major Prolog implementations they can be if they are the same sequence of characters.
 
 One feature we had implemented in the evaluator but later took out was prompting the user after finding a result in query evaluation to see if the user wanted more results. We had implemented this but as this feature requires user interaction, it became very difficult to write unit tests for. This feature is present in all of the major Prolog implementations as it can help avoid a lot of evaluation if the user already got the answer they were looking for. We decided it was better to be able to test the evaluator thoroughly with unit tests than to have this feature so we removed it.
 
