@@ -1,7 +1,7 @@
 Tests
 =====
 
-When building a complex project like an interpreter, stability is crucial. Our prolog implementation comes with a wide variety of tests to detect and prevent bugs.
+When building a complex project like an interpreter, stability is crucial. Our Prolog implementation comes with a wide variety of tests to detect and prevent bugs.
 
 Unit Tests
 ----------
@@ -54,13 +54,15 @@ Our `documentation <http://prolog.readthedocs.io/en/latest/>`_ is built using `S
 
 .. note::
 
-   Sphinx and sphinx_rtd_theme are required in order to build the documentation. If you want to build a PDF, LaTeX is also required.
+   Sphinx, sphinx_rtd_theme, and Graphviz are required in order to build the documentation. If you want to build a PDF, LaTeX is also required.
 
 
 Continuous Integration
 ----------------------
 
-Each commit to the GitHub repository can introduce new features, but it can also introduce bugs. In order to prevent these bugs from creeping in, we use `Travis CI <https://travis-ci.org/>`_ for continuous integration testing. Travis runs our unit and documentation tests after each commit, and reports any problems to the developers when the build crashes. It runs these tests using the five latest versions of OCaml (4.02 - 4.06) to make sure that our prolog interpreter works with any modern version of OCaml.
+Each commit to the GitHub repository can introduce new features, but it can also introduce bugs. In order to prevent these bugs from creeping in, we use `Travis CI <https://travis-ci.org/>`_ for continuous integration testing. Travis runs our unit and documentation tests after each commit, and reports any problems to the developers when the build crashes. It runs these tests using the five latest versions of OCaml (4.02 - 4.06) to make sure that our Prolog interpreter works with any modern version of OCaml.
+
+Travis does not have official OCaml support, so we had to manually install each version of OCaml in our CI script. Our Travis configuration was partially inspired by the `ocaml-ci-scripts <https://github.com/ocaml/ocaml-ci-scripts>`_ repository.
 
 To view the results of the latest build, see https://travis-ci.org/adamjstewart/prolog. For our Travis configuration, see ``.travis.yml``.
 
@@ -68,7 +70,7 @@ To view the results of the latest build, see https://travis-ci.org/adamjstewart/
 Coverage
 --------
 
-Unit tests are useless if they don't actually test the function containing a bug. We used `bisect_ppx <https://github.com/aantron/bisect_ppx>`_ to get an accurate measurement of what percentage of our code base was actually covered by unit tests. By integrating our unit tests with bisect_ppx, we can generate coverage reports that can be viewed through a web browser to see exactly which lines were hit. This was extremely beneficial when testing the lexer and parser, as it told us exactly which match cases were being missed. Before we started using bisect_ppx, we were getting around 65% coverage. With the help of bisect_ppx, we were able to attain over 90% coverage. The remaining 10% is really obscure corner cases that can arise in the lexer and parser, causing errors to occur.
+Unit tests are useless if they don't actually test the function containing a bug. We used `bisect_ppx <https://github.com/aantron/bisect_ppx>`_ to get an accurate measurement of what percentage of our code base was actually covered by unit tests. By integrating our unit tests with bisect_ppx, we can generate coverage reports that can be viewed through a web browser to see exactly which lines were hit. This was extremely beneficial when testing the lexer and parser, as it told us exactly which match cases were being missed. Before we started using bisect_ppx, we were getting around 65% coverage. With the help of bisect_ppx, we were able to attain 93% coverage. The remaining 7% is really obscure corner cases that can arise in the lexer and parser, causing errors to occur.
 
 After each successful build, Travis uploads our coverage reports to `Coveralls <https://coveralls.io/>`_. To view our coverage reports, including which lines are not yet covered by unit tests, see https://coveralls.io/github/adamjstewart/prolog?branch=master.
 

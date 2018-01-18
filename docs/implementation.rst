@@ -4,13 +4,11 @@ Implementation
 Capabilities
 ------------
 
-We implemented an abstract syntax, parser, lexer, evaluator, and interpreter for a simple version of Prolog in OCaml. The interpreter is used to interact with the user so that the user can input Prolog facts, rules (Horn clauses), or queries and see the output. The user's input is tokenized by our lexer, the tokens are converted into our abstract syntax by our parser, which is then evaluated by our evaluator.
+We implemented an abstract syntax, parser, lexer, evaluator, and interpreter for a simple version of Prolog in OCaml. The interpreter is used to interact with the user so that the user can input Prolog facts, rules (Horn clauses), or queries and see the output. The user's input is tokenized by our lexer, the tokens are converted into our abstract syntax by our parser, and the abstract syntax tree is then evaluated by our evaluator.
 
+Our components fully support the `grammar <https://github.com/simonkrenger/ch.bfh.bti7064.w2013.PrologParser/blob/master/doc/prolog-bnf-grammar.txt>`_ we mentioned in our project proposal. We support the string, integer, and float Prolog literals. Prolog variables, atoms, and compound terms are fully supported. Prolog facts and rules based on conjunction are also fully supported. Prolog queries consisting of the components mentioned previously are also fully supported.
 
-Our components fully support the `grammar <https://github.com/simonkrenger/ch.bfh.bti7064.w2013.PrologParser/blob/master/doc/prolog-bnf-grammar.txt>`_ we mentioend in our project proposal. We support the string, integer, and float Prolog literals. Prolog variables, atoms, compound terms are fully supported. Prolog facts and rules based on conjunction are also fully supported. Prolog queries consisting of the componenets mentioned previously are also fully supported.
-
-
-We also implement a build system, test suites and framework, and continuous integration to thoroughly test our implementation.
+We also implemented a build system, test suites and framework, and continuous integration to thoroughly test our implementation.
 
 Components
 ----------
@@ -18,19 +16,21 @@ Components
 Build System
 ^^^^^^^^^^^^
 
-In order to build the project, we used the `OCamlbuild <https://github.com/ocaml/ocamlbuild>`_ build system. OCamlbuild allowed us to write a greatly simplified Makefile, as OCamlbuild performs a static analysis of the code to determine the correct order in which to build and link every file. Our Makefile has both ``native`` and ``byte`` targets to build either a native or bytecode executable, respectively. OCamlbuild uses `OCamlfind <http://projects.camlcity.org/projects/findlib.html>`_ to locate external dependencies like Menhir.
+In order to build the project, we used the `OCamlbuild <https://github.com/ocaml/ocamlbuild>`_ build system. OCamlbuild allowed us to write a greatly simplified Makefile, as OCamlbuild performs a static analysis of the code to determine the correct order in which to build and link every file. Additionally, OCamlbuild uses `OCamlfind <http://projects.camlcity.org/projects/findlib.html>`_ to locate external dependencies like Menhir.
+
+Our Makefile has both ``native`` and ``byte`` targets to build either a native or bytecode executable, respectively. By default, ``make`` builds a ``main.byte`` executable. When executed, this program provides an interactive interpreter for entering Prolog clauses and queries.
 
 To view our OCamlbuild configuration, see ``_tags``.
 
 Abstract Syntax Tree
 ^^^^^^^^^^^^^^^^^^^^
 
-``ast.ml`` contains the types needed to represent an abstract syntax tree of a prolog program. Each line of the program is either a *clause* or a *query*. There are two types of clauses: *rules* and *facts*.
+``ast.ml`` contains the types needed to represent an abstract syntax tree of a Prolog program. Each line of the program is either a *clause* or a *query*. There are two types of clauses: *rules* and *facts*.
 
 Rules
 """""
 
-A *rule* in prolog takes the form:
+A *rule* in Prolog takes the form:
 
 .. code-block:: prolog
 
@@ -60,7 +60,7 @@ can be represented with the following abstract syntax tree:
 Facts
 """""
 
-In prolog, a rule with no body is called a *fact*. As an example, the fact:
+In Prolog, a rule with no body is called a *fact*. As an example, the fact:
 
 .. code-block:: prolog
 
@@ -118,7 +118,7 @@ can be represented with the following abstract syntax tree:
 Terms
 """""
 
-In prolog, there is only a single data type, the *term*, which can either be an *atom*, *number*, *variable*, or *compound term*. Compound terms take the form:
+In Prolog, there is only a single data type, the *term*, which can either be an *atom*, *number*, *variable*, or *compound term*. Compound terms take the form:
 
 .. code-block:: prolog
 
@@ -156,12 +156,12 @@ Variables are identified by alphanumerical tokens starting with a capital letter
 Comments
 """"""""
 
-Our lexer supports line comments (identified by ``%``) and multi-line comments (identified by ``/*`` and ``*/``). Although not all prolog implementations agree on nesting, our lexer supports nested multi-line comments.
+Our lexer supports line comments (identified by ``%``) and multi-line comments (identified by ``/*`` and ``*/``). Although not all Prolog implementations agree on nesting, our lexer supports nested multi-line comments.
 
 Rules
 """""
 
-Our lexer requires five lexing rules: one for general tokens, one for comments, one for atoms, one for strings, and one for escaped character sequences. Since both atoms and strings can contain escaped characters, the rule for handling escape sequences takes a callback rule as a parameter. Our lexer handles both octal and hexadecimal characters in escape sequences.
+Our lexer requires five lexing rules: one for general tokens, one for comments, one for atoms, one for strings, and one for escaped character sequences. Since both atoms and strings can contain escaped characters, the rule for handling escape sequences takes a callback rule as a parameter. This callback tells the lexer which rule to return to after the escaped character sequence has been evaluated. Our lexer handles both octal and hexadecimal characters in escape sequences.
 
 Parser
 ^^^^^^
@@ -191,7 +191,7 @@ The full BNF grammar we support is listed here:
            : string
 
 
-Instead of OCamlyacc, we decided to use `Menhir <http://pauillac.inria.fr/~fpottier/menhir/menhir.html.en>`_ as our parser generator. Menhir offers several benefits over OCamlyacc, including more readable error messages and the ability to name semantic values instead of the traditional keywords: ``$1``, ``$2``, etc.
+Instead of OCamlyacc, we decided to use `Menhir <http://pauillac.inria.fr/~fpottier/menhir/menhir.html.en>`_ as our parser generator. Menhir offers several benefits over OCamlyacc, including more readable error messages and the ability to name semantic values instead of using the traditional keywords: ``$1``, ``$2``, etc.
 
 The following graph represents the connections between each non-terminal in our grammar, and was generated using ``menhir --graph`` and `Graphviz <http://www.graphviz.org/>`_:
 
@@ -206,7 +206,7 @@ The top level function of the evaluator is ``eval_dec`` in ``evaluator.ml``. The
 Evaluating a Clause
 """""""""""""""""""
 
-To evaluate a declaration ``d`` that is a ``ClauseExp`` with a database ``db``, the evaluator returns a new database with ``d`` prepended to ``db``. The one exception to this is if ``d`` is giving meaning to the ``true`` atom. We consider ``true`` to be a built-in predicate used only to define facts and thus users are not allowed to define it. In the case the user tries to add a clause for the ``true`` atom, a message is printed telling the user that that is not possible and ``db``, the original database, is returned.
+To evaluate a declaration ``d`` that is a ``ClauseExp`` with a database ``db``, the evaluator returns a new database with ``d`` prepended to ``db``. The one exception to this is if ``d`` is giving meaning to the ``true`` atom. We consider ``true`` to be a built-in predicate used only to define facts and thus users are not allowed to redefine it. In the case the user tries to add a clause for the ``true`` atom, a message is printed telling the user that this is not possible and ``db``, the original database, is returned.
 
 Evaluating a Query
 """"""""""""""""""
@@ -249,7 +249,7 @@ The pseudocode for our implementation of the algorithm to evaluate a query ``G``
 
 The first thing the ``eval_query`` function does is check if ``G`` is empty, meaning that there are no subgoals in ``G`` to prove and that the substitutions in ``subs`` provide one solution for the query. Since there is nothing left to prove for ``G`` the function returns the substitutions inside of a list. This is necessary because at the end ``eval_query`` returns a list of list of substitutions, where each element is a set of substitutions that proved the query.
 
-If ``G`` is not empty, then there is at least one subgoal, ``g1``, to prove and ``g`` is the possibly empty list of other subgoals. Since ``g1`` is the head of the list, it will be the leftmost subgoal in the goal. So we always try to prove the leftmost subgoal, just like how `SWI-Prolog <http://www.swi-prolog.org/pldoc/man?section=overview>`__ does it. If ``g1`` is the ``true`` predicate then we do not need to prove it and can move on to the other subgoals in ``g``. Otherwise, to prove ``g1``, we iterate over the database ``db`` in the order in which the entries in the database were entered and find each rule or fact in the database that matches with ``g1``. A rule or fact matching ``g1`` implies that the rule or fact can be used to prove ``g1``. Since both facts and rules are represented as a ``ClauseExp`` with a head (``h``) and body (``[b1 .. bn]``) component, to match ``g1`` with a rule or fact we use unification on the constraint ``[{g1, h}]``. If unification succeeds and a substitution ``σ1`` is returned, we can use that rule or fact to prove ``g1``. If the entry from the db was a fact, the only subgoals left to prove are in ``g``, so our new goal ``G'`` gets assigned to the result of applying the substitution ``σ1`` to ``g``. If the entry from the db that matched ``g1`` was a rule, then we have more subgoals to prove, more specifically the subgoals from the body of the rule, ``[b1 .. bn]``, along with the other remaining subgoals from ``g``. So in this case the ``G'`` is set to the substitution ``σ1`` applied to the result of prepending the body of the rule to ``g``. Then the substitution ``σ1`` is appended to the substitutions passed into ``eval_query``, ``subs``, and the result is unified  to give us a new substitution ``σ2`` for proving this answer. We add to our list of results thus far ``results`` the result of recursively calling ``eval_query`` with ``G'`` as the new goal and ``σ2`` as the new ``subs``. For a subgoal ``g1``, this process happens for each item in the database.
+If ``G`` is not empty, then there is at least one subgoal, ``g1``, to prove and ``g`` is the possibly empty list of other subgoals. Since ``g1`` is the head of the list, it will be the leftmost subgoal in the goal. So we always try to prove the leftmost subgoal, just like how `SWI-Prolog <http://www.swi-prolog.org/pldoc/man?section=overview>`__ does it. If ``g1`` is the ``true`` predicate then we do not need to prove it and can move on to the other subgoals in ``g``. Otherwise, to prove ``g1``, we iterate over the database ``db`` in the order in which the entries in the database were entered and find each rule or fact in the database that matches with ``g1``. A rule or fact matching ``g1`` implies that the rule or fact can be used to prove ``g1``. Since both facts and rules are represented as a ``ClauseExp`` with a head (``h``) and body (``[b1 .. bn]``) component, to match ``g1`` with a rule or fact we use unification on the constraint ``[{g1, h}]``. If unification succeeds and a substitution ``σ1`` is returned, we can use that rule or fact to prove ``g1``. If the entry from the db was a fact, the only subgoals left to prove are in ``g``, so our new goal ``G'`` gets assigned to the result of applying the substitution ``σ1`` to ``g``. If the entry from the db that matched ``g1`` was a rule, then we have more subgoals to prove, more specifically the subgoals from the body of the rule, ``[b1 .. bn]``, along with the other remaining subgoals from ``g``. In this case, ``G'`` is set to the substitution ``σ1`` applied to the result of prepending the body of the rule to ``g``. Then the substitution ``σ1`` is appended to the substitutions passed into ``eval_query``, ``subs``, and the result is unified  to give us a new substitution ``σ2`` for proving this answer. We add to our list of results thus far (``results``) the result of recursively calling ``eval_query`` with ``G'`` as the new goal and ``σ2`` as the new ``subs``. For a subgoal ``g1``, this process happens for each item in the database.
 
 The ``eval_query`` function finds answers to queries in a depth-first fashion as it always recurses after a fact or a rule matches the current leftmost subgoal ``g1``. When that call returns because either ``G'`` was proven or disproven then it continues on to the next fact or rule in the database. Backtracking is inherently handled as the leftmost subgoal ``g1`` is always matched against all rules and facts in the database and if, after checking against each element of the database, the subgoal ``g1`` can not be proven that partial candidate is abandoned. When the iteration over the database is done, only the possible results for a goal ``G`` will be present in ``results``.
 

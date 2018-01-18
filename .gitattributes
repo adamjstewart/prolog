@@ -1,0 +1,2 @@
+# *.ml files are OCaml, not Standard ML
+*.ml linguist-language=OCaml

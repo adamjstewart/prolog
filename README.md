@@ -55,6 +55,22 @@ $ cd prolog
 $ make
 ```
 
+Afterwards, the interpreter can be run like so:
+
+```
+$ ./main.byte
+
+Welcome to the Prolog Interpreter
+
+> cat(tom).
+> animal(X) :- cat(X).
+> ?- animal(X).
+====================
+X = tom
+====================
+true
+```
+
 ## Testing
 
 To run the test-suite, simply run `make test`:
