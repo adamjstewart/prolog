@@ -44,6 +44,9 @@
 %token LPAREN     /* (  */
 %token RPAREN     /* )  */
 %token COMMA      /* ,  */
+%token LBRACKET   /* [  */
+%token RBRACKET   /* ]  */
+%token PIPE       /* |  */
 
 /* Meta-characters */
 %token EOF
@@ -76,6 +79,15 @@ structure:
     | a = ATOM; LPAREN; RPAREN                          { atom_sugar a }
     | a = ATOM; LPAREN; tl = term_list; RPAREN          { TermExp (a, tl) }
 
+list:
+    | LBRACKET; RBRACKET                                { TermExp ("empty_list", [])}
+    | LBRACKET; l = list_body; RBRACKET                 { l }
+
+list_body:
+    | t = term                                          { TermExp("list", [t; TermExp("empty_list", [])]) }
+    | t = term; COMMA; l = list_body                    { TermExp("list", [t; l]) }
+    | t = term; PIPE; tl = term                         { TermExp("list", [t; tl]) }
+
 term_list:
     | t = term                                          { [t] }
     | t = term; COMMA; tl = term_list                   { t :: tl }
@@ -85,6 +97,7 @@ term:
     | a = ATOM                                          { atom_sugar a }
     | v = VAR                                           { VarExp v }
     | s = structure                                     { s }
+    | l = list                                          { l }
 
 constant:
     | i = INT                                           { IntConst i }

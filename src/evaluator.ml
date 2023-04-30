@@ -34,6 +34,23 @@ let rec find_vars q  =
         | TermExp (s, el) -> (find_vars el) @ (find_vars xs)
     )
 
+
+(*
+   find_vars_string:
+     * takes in:
+         q - a list of exp
+     * returns a list of all VarExp as strings
+*)
+let rec find_vars_string q  =
+    match q with
+    | [] -> []
+    | (x :: xs) -> (
+        match x with
+        | VarExp v -> v :: (find_vars_string xs)
+        | ConstExp c -> (find_vars_string xs)
+        | TermExp (s, el) -> (find_vars_string el) @ (find_vars_string xs)
+    )
+
 (*
    uniq:
      * takes in:
@@ -217,13 +234,22 @@ let rec unify constraints =
          - otherwise, each element is a list of substitutions for one solution
            to the query with the given db
 *)
-let rec eval_query (q, db, env) =
+let rec eval_query (q, db, env) orig_vars =
     match q with
     | [] -> (
         (* no more subgoals to prove so finished *)
         [env]
     )
     | (g1 :: gl) -> (  (* have at least one more subgoal (g1) to prove *)
+        let vars_list_string = (find_vars_string q)@orig_vars |> uniq in
+        let env =
+            List.filter (fun (v, _) ->
+                match v with
+                | VarExp elt -> List.exists (fun a -> String.equal elt a) vars_list_string
+                | _ -> false
+            )
+            env
+        in 
         match g1 with
         (* if goal is the true predicate *)
         | TermExp("true", []) -> (
@@ -232,6 +258,7 @@ let rec eval_query (q, db, env) =
               db,
               env
             )
+            orig_vars
         )
         (* if goal is some other predicate *)
         | TermExp(_,_) -> (
@@ -255,7 +282,8 @@ let rec eval_query (q, db, env) =
                                         sub_lift_goals s gl,
                                         db,
                                         env2
-                                     )) @ r)
+                                     ) orig_vars
+                                     ) @ r)
                                 (* if rule wasn't a fact then we have more
                                    subgoals from the body of the rule
                                    to prove *)
@@ -263,7 +291,8 @@ let rec eval_query (q, db, env) =
                                     (sub_lift_goals s b) @ (sub_lift_goals s gl),
                                     db,
                                     env2
-                                )) @ r))
+                                    ) orig_vars
+                                ) @ r))
                             else
                                 (* if rule wasn't a fact then we have more
                                    subgoals from the body of the rule
@@ -272,7 +301,8 @@ let rec eval_query (q, db, env) =
                                     (sub_lift_goals s b) @ (sub_lift_goals s gl),
                                     db,
                                     env2
-                                )) @ r)
+                                    ) orig_vars
+                                ) @ r)
                         )
                         (* the substitution from unify the rule head and subgoal
                            doesn't unify with the environment gathered so far *)
@@ -285,7 +315,7 @@ let rec eval_query (q, db, env) =
                 |  _ -> r
           )) db [] )
         (* subgoal isn't a TermExp *)
-        | _ -> eval_query (gl, db, env)
+        | _ -> eval_query (gl, db, env) orig_vars
     )
 
 (*
@@ -372,10 +402,11 @@ let eval_dec (dec, db) =
     | Query b -> (
         (* find all uniq VarExps in query *)
         let orig_vars = uniq (find_vars b) in
+        let orig_vars_string = find_vars_string b |> uniq in
         (* find num of VarExps in query *)
         let orig_vars_num = List.length orig_vars in
         (* evaluate query *)
-        let res = eval_query (b, db, []) in
+        let res = eval_query (b, db, []) orig_vars_string in
         (* print the result *)
         print_string (string_of_res (res) orig_vars orig_vars_num);
         (* reset fresh variable counter *)
