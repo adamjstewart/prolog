@@ -84,6 +84,9 @@ rule token = parse
     | '('               { LPAREN    }
     | ')'               { RPAREN    }
     | ','               { COMMA     }
+    | '['               { LBRACKET  }
+    | ']'               { RBRACKET  }
+    | '|'               { PIPE      }
 
 and comments count = parse
     | open_comment      { comments (1 + count) lexbuf }
